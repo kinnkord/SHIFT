@@ -72,7 +72,7 @@
         
         .hero-layout {
             display: grid;
-            grid-template-columns: 220px 1fr 220px;
+            grid-template-columns: 220px 1fr;
             border-bottom: 2px solid #000000;
             background: #121215;
         }
@@ -84,10 +84,6 @@
             color: #71717a;
             border-right: 2px solid #000000;
             box-sizing: border-box;
-        }
-        .side-panel.right {
-            border-right: none;
-            border-left: 2px solid #000000;
         }
         .panel-title {
             font-weight: bold;
@@ -124,24 +120,38 @@
         }
         .btn:hover, .buy-btn:hover { background: #ffffff; color: #000000; border-color: #ffffff; }
 
-        .products-section { padding: 40px 20px; background: #09090b; text-align: center; }
+        .catalog-layout {
+            display: grid;
+            grid-template-columns: 1fr 220px;
+            background: #09090b;
+        }
+
+        .products-section { padding: 40px 20px; text-align: center; }
         .section-title { font-size: 14px; font-weight: bold; margin-bottom: 30px; text-align: left; border-bottom: 2px dashed #27272a; padding-bottom: 5px; color: #71717a; letter-spacing: 1px;}
-        .products-grid { display: flex; justify-content: center; max-width: 400px; margin: 0 auto; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; max-width: 600px; margin: 0 auto; }
         
         .product-card { 
             background: #121215; 
             border: 2px solid;
             border-color: #3a3a42 #0a0a0a #0a0a0a #3a3a42;
             padding: 15px; 
-            width: 100%;
             display: flex; 
             flex-direction: column; 
             justify-content: space-between; 
             text-align: left;
         }
-        .product-card img { width: 100%; height: 380px; object-fit: cover; border: 2px solid #000000; margin-bottom: 15px; background: #1a1a1e; }
-        .product-title { font-size: 14px; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; color: #ffffff; }
-        .product-price { font-size: 14px; margin-bottom: 15px; color: #71717a; font-weight: bold; }
+        .product-card img { width: 100%; height: 300px; object-fit: cover; border: 2px solid #000000; margin-bottom: 15px; background: #1a1a1e; }
+        .product-title { font-size: 13px; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; color: #ffffff; }
+        .product-price { font-size: 13px; margin-bottom: 15px; color: #71717a; font-weight: bold; }
+
+        .product-card.empty-slot img { object-fit: contain; padding: 40px; box-sizing: border-box; background: #151518; border: 2px dashed #3a3a42; opacity: 0.4;}
+        .product-card.empty-slot .product-title { color: #4b4b54; }
+
+        .catalog-layout .side-panel.right {
+            border-right: none;
+            border-left: 2px solid #000000;
+            background: #09090b;
+        }
 
         .taskbar {
             position: fixed;
@@ -200,7 +210,6 @@
         </header>
 
         <div class="hero-layout">
-            <!-- Левый декор: Системная инфа -->
             <div class="side-panel">
                 <div class="panel-title">> Sys_Info</div>
                 <div class="meta-line">STATUS: ACTIVE</div>
@@ -211,59 +220,67 @@
                 <div class="meta-line">PACKETS: OK</div>
             </div>
 
-            <!-- Центр: Главное фото (hoodie.png) -->
             <section class="hero">
                 <img src="hoodie.png" alt="SHIFT Clothing">
                 <h1>DROP: SYSTEM-1998</h1>
                 <p>Digital nostalgia and heavy cyber-brutalism aesthetics. Oversized heavy-weight cotton clothing tailored for the grid.</p>
                 <a href="#catalog" class="btn">OPEN_CATALOG.BAT</a>
             </section>
-
-            <!-- Правый декор: Структура папок -->
-            <div class="side-panel right">
-                <div class="panel-title">> Navigator</div>
-                <div class="meta-line">└─┬ root</div>
-                <div class="meta-line">  ├─┬ media</div>
-                <div class="meta-line">  │ ├── hoodie.png</div>
-                <div class="meta-line">  │ └── hoodie2.png</div>
-                <div class="meta-line">  ├─┬ source</div>
-                <div class="meta-line">  │ └── index.html</div>
-                <div class="meta-line">  └── config.sys</div>
-            </div>
         </div>
 
-        <!-- Витрина: Один товар с альтернативным фото (hoodie2.png) -->
-        <section class="products-section" id="catalog">
-            <div class="section-title">SELECT_ITEM_TO_LOAD:</div>
-            <div class="products-grid">
-                
-                <div class="product-card">
-                    <img src="hoodie2.png" alt="Heavy Hoodie Alternate View">
-                    <div>
-                        <div class="product-title">Heavy Hoodie / System-1998 (Alt View)</div>
-                        <div class="product-price">6 500 RUB</div>
+        <div class="catalog-layout" id="catalog">
+            <section class="products-section">
+                <div class="section-title">SELECT_ITEM_TO_LOAD:</div>
+                <div class="products-grid">
+                    
+                    <div class="product-card">
+                        <img src="hoodie2.png" alt="Heavy Hoodie Alt">
+                        <div>
+                            <div class="product-title">Heavy Hoodie / System-1998 (Alt)</div>
+                            <div class="product-price">6 500 RUB</div>
+                        </div>
+                        <button class="buy-btn">BUY_NOW</button>
                     </div>
-                    <button class="buy-btn">BUY_NOW</button>
+
+                    <div class="product-card empty-slot">
+                        <img src="https://alexmeub.com" alt="Tee Blank">
+                        <div>
+                            <div class="product-title">[EMPTY_SLOT] / Oversize Tee</div>
+                            <div class="product-price">-- --- RUB</div>
+                        </div>
+                        <button class="buy-btn" style="opacity: 0.3; pointer-events: none;">LOADING...</button>
+                    </div>
+
                 </div>
+            </section>
 
-            </div>
-        </section>
+                    <div class="side-panel right">
+            <div class="panel-title">> Navigator</div>
+            <div class="meta-line">└─┬ root</div>
+            <div class="meta-line">  ├─┬ media</div>
+            <div class="meta-line">  │ ├── hoodie.png</div>
+            <div class="meta-line">  │ └── hoodie2.png</div>
+            <div class="meta-line">  ├─┬ source</div>
+            <div class="meta-line">  │ └── index.html</div>
+            <div class="meta-line">  └── config.sys</div>
+        </div>
     </div>
+</div>
 
-    <div class="taskbar">
-        <button class="start-btn">Start</button>
-        <div class="tray-clock" id="clock">00:00</div>
-    </div>
+<div class="taskbar">
+    <button class="start-btn">Start</button>
+    <div class="tray-clock" id="clock">00:00</div>
+</div>
 
-    <script>
-        function updateClock() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-            document.getElementById('clock').innerText = timeString;
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-    </script>
+<script>
+    function updateClock() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('clock').innerText = timeString;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+</script>
 
 </body>
 </html>
