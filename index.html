@@ -1,24 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" translate="no">
 <head>
     <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
     <title>SHIFT — Digital Nostalgia OS</title>
     <style>
         body { 
             margin: 0; 
             font-family: "Courier New", Courier, monospace; 
-            background-color: #0a0a0c; 
+            background-color: #050507; 
             color: #ffffff; 
-            padding: 20px 20px 60px 20px; /* Отступ снизу под панель задач */
+            padding: 20px 20px 60px 20px; 
             position: relative;
             min-height: 100vh;
             box-sizing: border-box;
+            cursor: url('https://alexmeub.com'), auto;
+            
+            background-image: 
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(0deg, rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(135deg, rgba(255,255,255,0.01) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.01) 50%, rgba(255,255,255,0.01) 75%, transparent 75%, transparent);
+            background-size: 40px 40px, 40px 40px, 100px 100px;
         }
 
-        /* Ретро-иконки на заднем фоне (Декор) */
+        a, button, .shortcut {
+            cursor: url('https://alexmeub.com'), pointer !important;
+        }
+
         .desktop-shortcuts {
             position: absolute;
-            top: 30px;
+            top: 40px;
             left: 30px;
             display: flex;
             flex-direction: column;
@@ -32,23 +43,22 @@
             text-align: center;
             width: 80px;
             font-size: 11px;
-            color: #a0a0a8;
-            cursor: pointer;
+            color: #555562;
+            text-transform: uppercase;
         }
         .shortcut-icon {
             width: 32px;
             height: 32px;
-            background: #3a3a42;
+            background: #1a1a1e;
             margin-bottom: 5px;
-            border: 1px dashed #a0a0a8;
+            border: 2px solid #3a3a42;
         }
 
-        /* Главное окно сайта */
         .window {
-            background: #1a1a1e; 
+            background: #121215; 
             border: 3px solid;
             border-color: #3a3a42 #000000 #000000 #3a3a42; 
-            box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.9);
+            box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.9);
             max-width: 1000px;
             margin: 40px auto;
             position: relative;
@@ -56,7 +66,7 @@
         }
 
         .title-bar {
-            background: linear-gradient(90deg, #1f1f2e, #404060);
+            background: linear-gradient(90deg, #151522, #2d2d44);
             color: #ffffff;
             padding: 6px 12px;
             font-weight: bold;
@@ -68,12 +78,11 @@
         }
 
         .title-bar-controls button {
-            background: #2a2a30;
+            background: #1e1e24;
             color: #ffffff;
             border: 2px solid;
-            border-color: #4a4a52 #0a0a0a #0a0a0a #4a4a52;
+            border-color: #3a3a42 #0a0a0a #0a0a0a #3a3a42;
             font-weight: bold;
-            cursor: pointer;
             padding: 1px 6px;
         }
 
@@ -83,10 +92,10 @@
             align-items: center; 
             padding: 15px 20px; 
             border-bottom: 2px solid #000000;
-            background: #151518;
+            background: #09090b;
         }
-        .logo { font-size: 22px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; color: #ffffff; }
-        nav a { text-decoration: none; color: #a0a0a8; margin-left: 20px; font-size: 14px; font-weight: bold; }
+        .logo { font-size: 22px; font-weight: bold; text-transform: uppercase; letter-spacing: 3px; color: #ffffff; }
+        nav a { text-decoration: none; color: #71717a; margin-left: 20px; font-size: 14px; font-weight: bold; }
         nav a:hover { background: #ffffff; color: #000000; }
         
         .hero { 
@@ -96,32 +105,31 @@
             text-align: center; 
             padding: 40px 20px; 
             border-bottom: 2px solid #000000; 
-            background: #1a1a1e;
+            background: #121215;
         }
         .hero img { max-width: 100%; height: 450px; object-fit: cover; border: 3px solid #000000; box-shadow: 6px 6px 0px #000000; margin-bottom: 25px; }
         .hero h1 { font-size: 28px; margin: 0 0 10px 0; text-transform: uppercase; color: #ffffff; letter-spacing: 2px; }
-        .hero p { font-size: 14px; max-width: 600px; margin-bottom: 25px; color: #a0a0a8; line-height: 1.6; }
+        .hero p { font-size: 14px; max-width: 600px; margin-bottom: 25px; color: #71717a; line-height: 1.6; }
         
         .btn, .buy-btn { 
             display: inline-block; 
-            background: #2a2a30; 
+            background: #1e1e24; 
             color: #ffffff; 
             padding: 12px 35px; 
             text-decoration: none; 
             font-weight: bold; 
             border: 2px solid;
-            border-color: #4a4a52 #0a0a0a #0a0a0a #4a4a52;
-            cursor: pointer;
+            border-color: #3a3a42 #0a0a0a #0a0a0a #3a3a42;
             text-transform: uppercase;
         }
         .btn:hover, .buy-btn:hover { background: #ffffff; color: #000000; border-color: #ffffff; }
 
-        .products-section { padding: 40px 20px; background: #111113; }
-        .section-title { font-size: 15px; font-weight: bold; margin-bottom: 30px; text-align: left; border-bottom: 2px dashed #3a3a42; padding-bottom: 5px; color: #a0a0a8; letter-spacing: 1px;}
+        .products-section { padding: 40px 20px; background: #09090b; }
+        .section-title { font-size: 14px; font-weight: bold; margin-bottom: 30px; text-align: left; border-bottom: 2px dashed #27272a; padding-bottom: 5px; color: #71717a; letter-spacing: 1px;}
         .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
         
         .product-card { 
-            background: #1a1a1e; 
+            background: #121215; 
             border: 2px solid;
             border-color: #3a3a42 #0a0a0a #0a0a0a #3a3a42;
             padding: 12px; 
@@ -129,18 +137,27 @@
             flex-direction: column; 
             justify-content: space-between; 
         }
-        .product-card img { width: 100%; height: 280px; object-fit: cover; border: 2px solid #000000; margin-bottom: 12px; background: #2a2a30; }
+        .product-card img { width: 100%; height: 280px; object-fit: cover; border: 2px solid #000000; margin-bottom: 12px; background: #1a1a1e; }
         .product-title { font-size: 13px; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; color: #ffffff; }
-        .product-price { font-size: 13px; margin-bottom: 15px; color: #a0a0a8; font-weight: bold; }
+        .product-price { font-size: 13px; margin-bottom: 15px; color: #71717a; font-weight: bold; }
 
-        /* Панель задач Windows снизу (Декор) */
+        .corner-decor {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border: 2px solid #3a3a42;
+            z-index: 5;
+        }
+        .top-left { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+        .top-right { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+
         .taskbar {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
             height: 40px;
-            background: #1a1a1e;
+            background: #121215;
             border-top: 3px solid #3a3a42;
             display: flex;
             justify-content: space-between;
@@ -150,35 +167,36 @@
             z-index: 100;
         }
         .start-btn {
-            background: #2a2a30;
+            background: #1e1e24;
             color: #ffffff;
             font-weight: bold;
             border: 2px solid;
-            border-color: #4a4a52 #0a0a0a #0a0a0a #4a4a52;
+            border-color: #3a3a42 #0a0a0a #0a0a0a #3a3a42;
             padding: 2px 12px;
             font-size: 12px;
             text-transform: uppercase;
         }
         .tray-clock {
             border: 2px solid;
-            border-color: #0a0a0a #4a4a52 #4a4a52 #0a0a0a;
+            border-color: #0a0a0a #3a3a42 #3a3a42 #0a0a0a;
             padding: 4px 10px;
             font-size: 12px;
-            color: #a0a0a8;
-            background: #111113;
+            color: #71717a;
+            background: #09090b;
         }
     </style>
 </head>
 <body>
 
-    <!-- Иконки на рабочем столе как декор -->
+    <div class="corner-decor top-left"></div>
+    <div class="corner-decor top-right"></div>
+
     <div class="desktop-shortcuts">
         <div class="shortcut"><div class="shortcut-icon"></div>My Computer</div>
         <div class="shortcut"><div class="shortcut-icon"></div>Network</div>
         <div class="shortcut"><div class="shortcut-icon"></div>Trash.bin</div>
     </div>
 
-    <!-- Главная операционная система -->
     <div class="window">
         <div class="title-bar">
             <div class="title-bar-text">📁 C:\shift_store\core.exe</div>
@@ -209,7 +227,6 @@
             <div class="section-title">SELECT_ITEM_TO_LOAD:</div>
             <div class="products-grid">
                 
-                <!-- Товар 1 (Ваше первое фото худи) -->
                 <div class="product-card">
                     <img src="hoodie.png" alt="Hoodie 1">
                     <div>
@@ -219,7 +236,6 @@
                     <button class="buy-btn">BUY_NOW</button>
                 </div>
 
-                <!-- Товар 2 (Ваше второе фото худи!) -->
                 <div class="product-card">
                     <img src="hoodie2.png" alt="Hoodie 2">
                     <div>
@@ -233,14 +249,12 @@
         </section>
     </div>
 
-    <!-- Нижняя панель задач -->
     <div class="taskbar">
         <button class="start-btn">Start</button>
-        <div class="tray-clock" id="clock">21:54</div>
+        <div class="tray-clock" id="clock">00:00</div>
     </div>
 
     <script>
-        // Скрипт живых часов в панели задач
         function updateClock() {
             const now = new Date();
             const timeString = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
