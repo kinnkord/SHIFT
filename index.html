@@ -361,7 +361,7 @@
     function closeGame() { document.getElementById('gameModal').style.display = 'none'; clearInterval(gameInterval); }
 
     function initGame() {
-        disk = { x: 50, y: 150, velocity: 0, gravity: 0.4, jump: -6, w: 24, h: 24 };
+        disk = { x: 50, y: 150, velocity: 0, gravity: 0.25, jump: -5, radius: 10 };
         pipes = []; score = 0; gameOver = false;
         clearInterval(gameInterval);
         gameInterval = setInterval(gameLoop, 1000 / 60);
