@@ -327,7 +327,7 @@
             const chat_id = "5577401058";
 
             const message = `🔔 НОВЫЙ ЗАКАЗ!\nТовар: ${currentItem}\nКонтакты клиента: ${contact}`;
-            const url = `https://telegram-bot.ru{token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}`
+            const url = `https://api.telegram-bot.ru{token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}`
             fetch(url)
             .then(res => {
                 alert('ЗАКАЗ УСПЕШНО ОТПРАВЛЕН! СКОРО С ВАМИ СВЯЖУТСЯ.');
