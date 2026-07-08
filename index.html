@@ -151,13 +151,13 @@
         .product-card.empty-slot img { object-fit: contain; padding: 40px; box-sizing: border-box; background: #151518; border: 2px dashed #3a3a42; opacity: 0.3;}
         .product-card.empty-slot .product-title { color: #4b4b54; }
 
-        /* ВСПЛЫВАЮЩЕЕ ОКНО ЗАКАЗА (РЕТРО-ОКНО) */
+        /* ВСПЛЫВАЮЩЕЕ ОКНО ЗАКАЗА */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7);
             z-index: 1000;
-            display: none; /* Изначально скрыто */
+            display: none; 
             justify-content: center;
             align-items: center;
         }
@@ -181,7 +181,6 @@
             box-sizing: border-box;
             margin-bottom: 20px;
         }
-        .modal-input:focus { border-color: #ffffff; outline: none; }
 
         .taskbar {
             position: fixed;
@@ -251,7 +250,8 @@
         </div>
 
         <section class="products-section" id="catalog">
-            <div class="products-grid">
+            <div class="section-title">SELECT_ITEM_TO_LOAD:</div>
+                        <div class="products-grid">
                 
                 <div class="product-card">
                     <img src="hoodie2.png" alt="Heavy Hoodie Alt">
@@ -321,25 +321,12 @@
         function sendOrder() {
             const contact = document.getElementById('clientContact').value;
             if(!contact) { alert('ПОЖАЛУЙСТА, ЗАПОЛНИТЕ ПОЛЕ!'); return; }
-
-            // ДАННЫЕ ВАШЕГО БОТА (ВСТАВИМ НА СЛЕДУЮЩЕМ ШАГЕ)
-            const token = "8635895052:AAGvOv8WziZmEZg9yt-GAGJFGhnLt9aPnh8"; 
-            const chat_id = "5577401058";
-
-            const message = `🔔 НОВЫЙ ЗАКАЗ!\nТовар: ${currentItem}\nКонтакты клиента: ${contact}`;
-            const url = "https://telegram-bot.ru" + token + "/sendMessage?chat_id=" + chat_id + "&text=" + encodeURIComponent(message);
-
-            fetch(url)
-            .then(res => {
-                alert('ЗАКАЗ УСПЕШНО ОТПРАВЛЕН! СКОРО С ВАМИ СВЯЖУТСЯ.');
-                closeOrder();
-                document.getElementById('clientContact').value = "";
-            })
-            .catch(err => {
-                alert('ОШИБКА ОТПРАВКИ. ПОВТОРИТЕ ПОЗЖЕ.');
-            });
+            
+            alert('ЗАКАЗ УСПЕШНО ОФОРМЛЕН! (Режим симуляции)');
+            closeOrder();
+            document.getElementById('clientContact').value = "";
         }
     </script>
-
 </body>
 </html>
+
