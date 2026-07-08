@@ -4,41 +4,43 @@
     <meta charset="UTF-8">
     <title>СДВИГ — Digital Nostalgia OS</title>
     <style>
-        /* Стиль старой операционной системы (Windows 95 / 98) */
+        /* Новое брутальное темное оформление */
         body { 
             margin: 0; 
             font-family: "Courier New", Courier, monospace; 
-            background-color: #008080; /* Тот самый культовый бирюзовый цвет рабочего стола */
-            color: #000000; 
+            background-color: #0a0a0c; /* Глубокий темный фон */
+            color: #ffffff; 
             padding: 20px;
         }
 
-        /* Окно браузера / Программы */
+        /* Темное окно программы */
         .window {
-            background: #c0c0c0; /* Серый цвет интерфейса Windows 95 */
+            background: #1a1a1e; /* Графитовый серый цвет */
             border: 3px solid;
-            border-color: #ffffff #0a0a0a #0a0a0a #ffffff; /* Объемные ретро-рамки */
-            box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
+            border-color: #3a3a42 #000000 #000000 #3a3a42; /* Объемные темные ретро-рамки */
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.8);
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        /* Синяя шапка окна */
+        /* Темно-синяя шапка окна */
         .title-bar {
-            background: linear-gradient(90deg, #000080, #1084d0);
+            background: linear-gradient(90deg, #1f1f2e, #404060);
             color: #ffffff;
-            padding: 4px 8px;
+            padding: 6px 12px;
             font-weight: bold;
             font-size: 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 2px solid #000000;
         }
 
         .title-bar-controls button {
-            background: #c0c0c0;
+            background: #2a2a30;
+            color: #ffffff;
             border: 2px solid;
-            border-color: #ffffff #0a0a0a #0a0a0a #ffffff;
+            border-color: #4a4a52 #0a0a0a #0a0a0a #4a4a52;
             font-weight: bold;
             cursor: pointer;
             padding: 1px 6px;
@@ -50,12 +52,12 @@
             justify-content: space-between; 
             align-items: center; 
             padding: 15px 20px; 
-            border-bottom: 2px solid #808080;
-            background: #c0c0c0;
+            border-bottom: 2px solid #000000;
+            background: #151518;
         }
-        .logo { font-size: 20px; font-weight: bold; text-transform: uppercase; }
-        nav a { text-decoration: none; color: #000000; margin-left: 20px; font-size: 14px; font-weight: bold; }
-        nav a:hover { background: #000080; color: #ffffff; }
+        .logo { font-size: 20px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; color: #ffffff; }
+        nav a { text-decoration: none; color: #a0a0a8; margin-left: 20px; font-size: 14px; font-weight: bold; }
+        nav a:hover { background: #ffffff; color: #000000; }
         
         /* Главный баннер */
         .hero { 
@@ -64,57 +66,58 @@
             align-items: center; 
             text-align: center; 
             padding: 40px 20px; 
-            border-bottom: 2px solid #808080; 
-            background: #ffffff;
+            border-bottom: 2px solid #000000; 
+            background: #1a1a1e;
         }
-        .hero img { max-width: 100%; height: 350px; object-fit: cover; border: 3px solid; border-color: #0a0a0a #ffffff #ffffff #0a0a0a; margin-bottom: 20px; }
-        .hero h1 { font-size: 28px; margin: 0 0 10px 0; text-transform: uppercase; }
-        .hero p { font-size: 14px; max-width: 600px; margin-bottom: 20px; }
+        .hero img { max-width: 100%; height: 450px; object-fit: cover; border: 3px solid #000000; box-shadow: 6px 6px 0px #000000; margin-bottom: 25px; }
+        .hero h1 { font-size: 28px; margin: 0 0 10px 0; text-transform: uppercase; color: #ffffff; letter-spacing: 2px; }
+        .hero p { font-size: 14px; max-width: 600px; margin-bottom: 25px; color: #a0a0a8; }
         
-        /* Ретро-кнопки */
+        /* Темные ретро-кнопки */
         .btn, .buy-btn { 
             display: inline-block; 
-            background: #c0c0c0; 
-            color: #000000; 
-            padding: 10px 30px; 
+            background: #2a2a30; 
+            color: #ffffff; 
+            padding: 12px 35px; 
             text-decoration: none; 
             font-weight: bold; 
             border: 2px solid;
-            border-color: #ffffff #0a0a0a #0a0a0a #ffffff;
+            border-color: #4a4a52 #0a0a0a #0a0a0a #4a4a52;
             cursor: pointer;
+            text-transform: uppercase;
         }
-        .btn:active, .buy-btn:active {
-            border-color: #0a0a0a #ffffff #ffffff #0a0a0a;
-            padding: 11px 29px 9px 31px;
+        .btn:hover, .buy-btn:hover {
+            background: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
         }
 
         /* Витрина товаров */
-        .products-section { padding: 40px 20px; background: #f1f1f1; }
-        .section-title { font-size: 18px; font-weight: bold; margin-bottom: 30px; text-align: left; border-bottom: 2px dashed #808080; padding-bottom: 5px;}
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .products-section { padding: 40px 20px; background: #111113; }
+        .section-title { font-size: 16px; font-weight: bold; margin-bottom: 30px; text-align: left; border-bottom: 2px dashed #3a3a42; padding-bottom: 5px; color: #a0a0a8;}
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
         
-        /* Карточка товара как отдельное окошко */
+        /* Карточка товара как отдельное темное окошко */
         .product-card { 
-            background: #c0c0c0; 
+            background: #1a1a1e; 
             border: 2px solid;
-            border-color: #ffffff #0a0a0a #0a0a0a #ffffff;
-            padding: 10px; 
+            border-color: #3a3a42 #0a0a0a #0a0a0a #3a3a42;
+            padding: 15px; 
             display: flex; 
             flex-direction: column; 
             justify-content: space-between; 
         }
-        .product-card img { width: 100%; height: 220px; object-fit: cover; border: 2px solid; border-color: #0a0a0a #ffffff #ffffff #0a0a0a; margin-bottom: 10px; }
-        .product-title { font-size: 14px; font-weight: bold; margin-bottom: 5px; }
-        .product-price { font-size: 14px; margin-bottom: 15px; color: #000080; font-weight: bold; }
+        .product-card img { width: 100%; height: 260px; object-fit: cover; border: 2px solid #000000; margin-bottom: 15px; background: #2a2a30; }
+        .product-title { font-size: 14px; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; color: #ffffff; }
+        .product-price { font-size: 14px; margin-bottom: 15px; color: #a0a0a8; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <!-- Главная обертка в виде окна Windows -->
     <div class="window">
-        <!-- Синяя ретро-панель сверху -->
+        <!-- Верхняя синяя панель -->
         <div class="title-bar">
-            <div class="title-bar-text">📁 C:\sdvig_store\index.exe</div>
+            <div class="title-bar-text">📁 C:\sdvig_store\dark_mode.exe</div>
             <div class="title-bar-controls">
                 <button>_</button>
                 <button>🗖</button>
@@ -122,11 +125,11 @@
             </div>
         </div>
 
-        <!-- Меню сайта -->
+        <!-- Меню -->
         <header>
             <div class="logo">СДВИГ_МЕРЧ.SYS</div>
             <nav>
-                <a href="#">[Каталог]</a>
+                <a href="#catalog">[Каталог]</a>
                 <a href="#">[Лукбук]</a>
                 <a href="#">[Инфо]</a>
             </nav>
@@ -135,37 +138,45 @@
         <!-- Главный баннер -->
         <section class="hero">
             <img src="hoodie.png" alt="Mersh">
-            <h1>ДРОП: СИСТЕМА-404</h1>
-            <p>Коллекция одежды в стиле техно-ностальгии. Плотный оверсайз хлопок, пиксельная графика, старая школа.</p>
-            <button class="btn">ОТКРЫТЬ_КАТАЛОГ.BAT</button>
+            <h1>ДРОП: СИСТЕМА-1998</h1>
+            <p>Коллекция одежды в стиле цифровой ностальгии. Плотный оверсайз хлопок, брутальный крой, старая компьютерная школа.</p>
+            <a href="#catalog" class="btn">ОТКРЫТЬ_КАТАЛОГ.BAT</a>
         </section>
 
-        <!-- Сетка товаров -->
-        <section class="products-section">
-            <div class="section-title">ВЫБЕРИТЕ_ТОВАР:</div>
+        <!-- Витрина -->
+        <section class="products-section" id="catalog">
+            <div class="section-title">ВЫБЕРИТЕ_ТОВАР_ДЛЯ_ЗАГРУЗКИ:</div>
             <div class="products-grid">
                 
                 <!-- Товар 1 -->
                 <div class="product-card">
-                    <img src="https://unsplash.com" alt="Футболка">
-                    <div class="product-title">Oversize Tee / Black-Out</div>
-                    <div class="product-price">3 200 RUB</div>
+                    <!-- Заглушка под будущую футболку -->
+                    <img src="https://alexmeub.com" style="object-fit: contain; padding: 20px; box-sizing: border-box;" alt="Футболка">
+                    <div>
+                        <div class="product-title">Oversize Tee / Black-Out</div>
+                        <div class="product-price">3 200 RUB</div>
+                    </div>
                     <button class="buy-btn">КУПИТЬ</button>
                 </div>
 
-                <!-- Товар 2 -->
+                <!-- Товар 2 (Ваше худи!) -->
                 <div class="product-card">
                     <img src="hoodie.png" alt="Худи">
-                    <div class="product-title">Heavy Hoodie / Error-404</div>
-                    <div class="product-price">6 500 RUB</div>
+                    <div>
+                        <div class="product-title">Heavy Hoodie / System-1998</div>
+                        <div class="product-price">6 500 RUB</div>
+                    </div>
                     <button class="buy-btn">КУПИТЬ</button>
                 </div>
 
                 <!-- Товар 3 -->
                 <div class="product-card">
-                    <img src="https://unsplash.com" alt="Кепка">
-                    <div class="product-title">Tech Cap / Root-Access</div>
-                    <div class="product-price">1 900 RUB</div>
+                    <!-- Заглушка под будущую кепку -->
+                    <img src="https://alexmeub.com" style="object-fit: contain; padding: 20px; box-sizing: border-box;" alt="Кепка">
+                    <div>
+                        <div class="product-title">Tech Cap / Root-Access</div>
+                        <div class="product-price">1 900 RUB</div>
+                    </div>
                     <button class="buy-btn">КУПИТЬ</button>
                 </div>
 
