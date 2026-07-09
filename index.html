@@ -125,7 +125,22 @@
             border: 2px solid;
             border-color: #3a3a42 #0a0a0a #0a0a0a #3a3a42;
             text-transform: uppercase;
+                .warning-text {
+            font-family: "Courier New", Courier, monospace;
+            font-weight: bold;
+            font-style: italic;
+            color: #ff3333;
+            font-size: 11px;
+            line-height: 1.5;
+            text-transform: uppercase;
+            animation: warningPulse 1.5s infinite alternate;
         }
+
+        @keyframes warningPulse {
+            0% { opacity: 0.4; text-shadow: 0 0 2px #ff0000; }
+            100% { opacity: 1; text-shadow: 0 0 8px #ff0000; }
+        }
+    
         .btn:hover, .buy-btn:hover { background: #ffffff; color: #000000; border-color: #ffffff; }
 
         .products-section { padding: 40px 20px; background: #09090b; text-align: center; border-top: 1px solid #121215; }
@@ -374,7 +389,6 @@
             if (gameEl.style.display === 'none') {
                 gameEl.style.display = 'block';
                 document.getElementById('scoreModal').style.display = 'block';
-                loadOnlineLeaderboard();
                 initGame();
             } else {
                 closeGame();
@@ -450,67 +464,14 @@
             ctx.fillText("SCORE: " + score, 15, 25);
         }
 
-                function triggerGameOver() {
+                   function triggerGameOver() {
             gameOver = true;
             clearInterval(gameInterval);
             ctx.fillStyle = "rgba(5,5,7,0.85)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = "#ff3333"; ctx.font = "bold 16px monospace"; ctx.fillText("SYSTEM OVERLOAD", 75, 150);
             ctx.fillStyle = "#ffffff"; ctx.font = "13px monospace"; ctx.fillText("YOUR SCORE: " + score, 100, 190);
             
-            document.getElementById('gameOverScoreText').innerText = `YOU SCORED ${score} POINTS!`;
-            document.getElementById('saveScoreModal').style.display = 'flex';
+            // Включаем наше кастомное пульсирующее окно ошибки!
+            document.getElementById('scoreModal').style.display = 'block';
         }
-
-        // ЗАГРУЗКА ТОП-3 ИЗ ОНЛАЙН БАЗЫ SUPABASE ТВОЕГО ПРОЕКТА
-        function loadOnlineLeaderboard() {
-            const url = SUPABASE_URL + "/rest/v1/leaderboard?select=name,score&order=score.desc&limit=3";
-            fetch(url, {
-                headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
-            })
-            .then(res => res.json())
-            .then(data => {
-                let html = "";
-                if(data.length === 0) {
-                    html = "<div style='opacity:0.4;'>NO RECORDS YET. BE THE FIRST!</div>";
-                } else {
-                    data.forEach((row, i) => {
-                        html += `<div style="display:flex; justify-content:space-between; margin-bottom:8px; color:${i===0?'#00ff00':'#a0a0a8'}">
-                            <span>0${i+1}. ${row.name.toUpperCase()}</span>
-                            <span>${row.score}</span>
-                        </div>`;
-                    });
-                }
-                document.getElementById('onlineScoresList').innerHTML = html;
-            })
-            .catch(() => {
-                document.getElementById('onlineScoresList').innerText = "FAILED TO CONNECT GRID.";
-            });
-        }
-
-        // ОТПРАВКА НОВОГО РЕКОРДА В БАЗУ ДАННЫХ В РЕАЛЬНОМ ВРЕМЕНИ
-        function submitScoreToOnline() {
-            const name = document.getElementById('playerNameInput').value.trim();
-            if(!name) { alert("ENTER NAME.EXE!"); return; }
-
-            const url = SUPABASE_URL + "/rest/v1/leaderboard";
-            fetch(url, {
-                method: "POST",
-                headers: { 
-                    "apikey": SUPABASE_KEY, 
-                    "Authorization": "Bearer " + SUPABASE_KEY,
-                    "Content-Type": "application/json",
-                    "Prefer": "return=minimal"
-                },
-                body: JSON.stringify({ name: name, score: score })
-            })
-            .then(() => {
-                closeScoreSave();
-                loadOnlineLeaderboard();
-                initGame();
-            })
-            .catch(() => { alert("SERVER UPLOAD ERROR"); });
-        }
-    </script>
-</body>
-</html>
-
+     
