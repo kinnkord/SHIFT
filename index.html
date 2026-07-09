@@ -125,22 +125,7 @@
             border: 2px solid;
             border-color: #3a3a42 #0a0a0a #0a0a0a #3a3a42;
             text-transform: uppercase;
-                .warning-text {
-            font-family: "Courier New", Courier, monospace;
-            font-weight: bold;
-            font-style: italic;
-            color: #ff3333;
-            font-size: 11px;
-            line-height: 1.5;
-            text-transform: uppercase;
-            animation: warningPulse 1.5s infinite alternate;
         }
-
-        @keyframes warningPulse {
-            0% { opacity: 0.4; text-shadow: 0 0 2px #ff0000; }
-            100% { opacity: 1; text-shadow: 0 0 8px #ff0000; }
-        }
-    
         .btn:hover, .buy-btn:hover { background: #ffffff; color: #000000; border-color: #ffffff; }
 
         .products-section { padding: 40px 20px; background: #09090b; text-align: center; border-top: 1px solid #121215; }
@@ -194,7 +179,6 @@
             margin-bottom: 20px;
         }
 
-        /* ОКНО ИГРЫ */
         .game-window {
             background: #1a1a1e;
             border: 3px solid;
@@ -218,6 +202,28 @@
         .tray-clock {
             border: 2px solid; border-color: #0a0a0a #3a3a42 #3a3a42 #0a0a0a;
             padding: 4px 10px; font-size: 12px; color: #71717a; background: #09090b;
+        }
+
+        /* Стильный пульсирующий наклонный текст */
+        .stat-glow-text {
+            font-family: "Courier New", Courier, monospace;
+            font-weight: bold;
+            font-style: italic;
+            font-size: 14px;
+            line-height: 1.6;
+            text-transform: uppercase;
+        }
+
+        /* Анимация пульсации кубка светом */
+        .trophy-glow {
+            font-size: 42px;
+            margin-bottom: 15px;
+            display: inline-block;
+            animation: trophyPulse 1.2s infinite alternate;
+        }
+        @keyframes trophyPulse {
+            0% { transform: scale(0.95); filter: drop-shadow(0 0 2px #00ff00); }
+            100% { transform: scale(1.05); filter: drop-shadow(0 0 15px #00ff00); }
         }
     </style>
 </head>
@@ -252,7 +258,6 @@
                     <div class="meta-line">STATUS: ACTIVE</div>
                     <div class="meta-line">HOST: LOCALGRID</div>
                     <div class="meta-line">CORE: V.1998</div>
-                    <div class="meta-line">BPP: 16-BIT</div>
                     <div class="meta-line">SIZE: 4.12 MB</div>
                     <div class="meta-line">PACKETS: OK</div>
                 </div>
@@ -263,9 +268,9 @@
                     <div class="meta-line">  ├─┬ media</div>
                     <div class="meta-line">  │ ├── hoodie.png</div>
                     <div class="meta-line">  │ └── hoodie2.png</div>
-                                             ├─┬ source
-                                             │ └── index.html
-                                             └── config.sys
+                    <div class="meta-line">  ├─┬ source</div>
+                    <div class="meta-line">  │ └── index.html</div>
+                    <div class="meta-line">  └── config.sys</div>
                 </div>
             </div>
         </div>
@@ -294,8 +299,6 @@
 
             </div>
         </section>
-    </div>
-
     <div class="modal-overlay" id="orderModal">
         <div class="modal-box">
             <div class="title-bar">
@@ -321,28 +324,19 @@
         </div>
     </div>
 
-    <div class="game-window" id="scoreModal" style="display: none; position: fixed; bottom: 490px; left: 20px; z-index: 999;">
+    <div class="game-window" id="scoreModal" style="display: none; position: fixed; bottom: 490px; left: 20px; z-index: 999; width: 320px; height: 320px; box-sizing: border-box;">
         <div class="title-bar">
-            <div class="title-bar-text">🏆 GLOBAL_LEADERBOARD.LOG</div>
+            <div class="title-bar-text">🏆 PROFILE_STATS.LOG</div>
             <div class="title-bar-controls"> <button onclick="closeGame()">X</button> </div>
         </div>
-        <div style="padding: 15px; font-size: 13px; color: #a0a0a8;">
-            <div style="color: #ffffff; font-weight: bold; margin-bottom: 10px; border-bottom: 1px dashed #3a3a42; padding-bottom: 4px;">GLOBAL GRID TOP PLAYERS:</div>
-            <div id="onlineScoresList">Loading online scores...</div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="saveScoreModal" style="z-index: 2000;">
-        <div class="modal-box">
-            <div class="title-bar">
-                <div class="title-bar-text">💾 SAVE_RECORD.EXE</div>
-                <div class="title-bar-controls"> <button onclick="closeScoreSave()">X</button> </div>
+        <div style="padding: 25px 15px; text-align: center; background: #09090b; height: calc(100% - 30px); box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+            <div class="trophy-glow">🏆</div>
+            
+            <div class="stat-glow-text" style="color: #ffffff; margin-top: 10px;">
+                YOUR SCORE: <span id="liveScoreLabel" style="color: #ffff00; font-size: 18px;">0</span>
             </div>
-            <div class="modal-body">
-                <div class="modal-text" id="gameOverScoreText">YOU SCORED 0 POINTS!</div>
-                <div class="modal-text">ENTER YOUR NAME FOR GLOBAL LEADERBOARD:</div>
-                <input type="text" class="modal-input" id="playerNameInput" placeholder="PLAYER_1998" maxlength="15">
-                <button class="buy-btn" style="width: 100%;" onclick="submitScoreToOnline()">UPLOAD_RECORD.BAT</button>
+            <div class="stat-glow-text" style="color: #00ff00; margin-top: 15px;">
+                BEST RECORD: <span id="liveBestLabel" style="color: #00ff00; font-size: 18px;">0</span>
             </div>
         </div>
     </div>
@@ -353,9 +347,6 @@
     </div>
 
     <script>
-        const SUPABASE_URL = "https://supabase.co";
-        const SUPABASE_KEY = "sb_publishable_JGVDkCUvkhmxad6WkkjDaQ_ey8vhzS7";
-
         let currentItem = "";
         function openOrder(itemName) {
             currentItem = itemName;
@@ -389,6 +380,7 @@
             if (gameEl.style.display === 'none') {
                 gameEl.style.display = 'block';
                 document.getElementById('scoreModal').style.display = 'block';
+                updateStatsDisplay();
                 initGame();
             } else {
                 closeGame();
@@ -398,15 +390,19 @@
         function closeGame() {
             document.getElementById('gameModal').style.display = 'none';
             document.getElementById('scoreModal').style.display = 'none';
-            closeScoreSave();
             clearInterval(gameInterval);
         }
 
-        function closeScoreSave() { document.getElementById('saveScoreModal').style.display = 'none'; }
+        function updateStatsDisplay() {
+            let highscore = localStorage.getItem("flop_highscore") || 0;
+            document.getElementById('liveScoreLabel').innerText = score || 0;
+            document.getElementById('liveBestLabel').innerText = highscore;
+        }
 
         function initGame() {
             disk = { x: 50, y: 180, velocity: 0, gravity: 0.17, jump: -4.1, w: 16, h: 16 };
             pipes = []; score = 0; gameOver = false;
+            updateStatsDisplay();
             clearInterval(gameInterval);
             gameInterval = setInterval(gameLoop, 1000 / 60);
         }
@@ -427,7 +423,8 @@
             
             ctx.save(); ctx.translate(disk.x, disk.y);
             ctx.fillStyle = "#0022aa"; ctx.beginPath();
-            ctx.moveTo(-14, -14); ctx.lineTo(8, -14); ctx.lineTo(14, -8); ctx.lineTo(14, 14); ctx.lineTo(-14, 14); ctx.closePath(); ctx.fill();
+            ctx.moveTo(-14, -14); ctx.lineTo(8, -14); ctx.lineTo(14, -8);
+            ctx.lineTo(14, 14); ctx.lineTo(-14, 14); ctx.closePath(); ctx.fill();
             ctx.lineWidth = 1; ctx.strokeStyle = "#000055"; ctx.stroke();
             ctx.fillStyle = "#888899"; ctx.fillRect(-6, -13, 10, 8);
             ctx.fillStyle = "#bbbbcc"; ctx.fillRect(-2, -13, 2, 8);
@@ -456,22 +453,32 @@
                     if (disk.y - 11 < pipes[i].top || disk.y + 11 > canvas.height - pipes[i].bottom) { triggerGameOver(); }
                 }
 
-                if (!pipes[i].passed && pipes[i].x < disk.x) { pipes[i].passed = true; score++; }
-                if (pipes[i].x < -40) { pipes.splice(i, 1); }
+                if (!pipes[i].passed && pipes[i].x < disk.x) { 
+                    pipes[i].passed = true; 
+                    score++; 
+
+                                if (pipes[i].x < -40) { pipes.splice(i, 1); }
             }
 
             ctx.fillStyle = "#ffffff"; ctx.font = "14px monospace";
             ctx.fillText("SCORE: " + score, 15, 25);
         }
 
-                   function triggerGameOver() {
+        function triggerGameOver() {
             gameOver = true;
             clearInterval(gameInterval);
+            
+            let highscore = localStorage.getItem("flop_highscore") || 0;
+            if (score > highscore) {
+                localStorage.setItem("flop_highscore", score);
+            }
+            updateStatsDisplay();
+
             ctx.fillStyle = "rgba(5,5,7,0.85)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = "#ff3333"; ctx.font = "bold 16px monospace"; ctx.fillText("SYSTEM OVERLOAD", 75, 150);
             ctx.fillStyle = "#ffffff"; ctx.font = "13px monospace"; ctx.fillText("YOUR SCORE: " + score, 100, 190);
-            
-            // Включаем наше кастомное пульсирующее окно ошибки!
-            document.getElementById('scoreModal').style.display = 'block';
+            ctx.fillStyle = "#ffffff"; ctx.font = "11px monospace"; ctx.fillText("CLICK SCREEN TO REBOOT.EXE", 60, 240);
         }
-     
+    </script>
+</body>
+</html>
