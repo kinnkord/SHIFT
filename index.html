@@ -415,7 +415,10 @@
                     if (disk.y - 11 < pipes[i].top || disk.y + 11 > canvas.height - pipes[i].bottom) { gameOver = true; }
                 }
 
-                if (pipes[i].x === 50) { score++; }
+                if (!pipes[i].passed && pipes[i].x < disk.x) {
+    pipes[i].passed = true;
+    score++;
+}
                 if (pipes[i].x < -40) { pipes.splice(i, 1); }
             }
 
