@@ -142,6 +142,31 @@
         .products-section { padding: 40px 20px; background: #09090b; text-align: center; border-top: 1px solid #121215; }
         .section-title { font-size: 14px; font-weight: bold; margin-bottom: 30px; text-align: left; border-bottom: 2px dashed #27272a; padding-bottom: 5px; color: #71717a; letter-spacing: 1px;}
         .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; max-width: 960px; margin: 0 auto; }
+                /* Окно плеера Winamp в углу */
+        .winamp-player {
+            position: fixed;
+            bottom: 50px;
+            right: 20px;
+            width: 240px;
+            background: #151518;
+            border: 3px solid;
+            border-color: #4a4a52 #000000 #000000 #4a4a52;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0px 0px 20px #000;
+            padding: 8px;
+        }
+
+        /* Полоски прыгающего эквалайзера */
+        .equalizer-bar {
+            width: 4px;
+            height: 5px;
+            background: #00ff00;
+            margin: 0 1px;
+            display: inline-block;
+            transition: height 0.1s ease;
+        }
+
 
         .product-card { 
             background: #121215; 
@@ -240,7 +265,7 @@
         <header>
             <div class="logo">SHIFT®</div>
             <nav>
-                <a href="#catalog">[Shop]</a> <a href="#">[Lookbook]</a> <a href="#">[System_Info]</a>
+                <a href="#catalog">[Shop]</a> <a href="javascript:void(0)" onclick="toggleWinamp()">[Winamp_Player]</a> <a href="#">[System_Info]</a>
             </nav>
         </header>
 
@@ -668,4 +693,63 @@
     </script>
 
 </body>
+        <!-- ОКНО WINAMP ПЛЕЕРА -->
+    <div class="winamp-player" id="winampModal">
+        <div class="title-bar" style="margin-bottom: 8px;">
+            <div class="title-bar-text">📻 WINAMP.EXE</div>
+            <div class="title-bar-controls"> <button onclick="toggleWinamp()">X</button> </div>
+        </div>
+        <div style="background: #09090b; border: 2px solid #3a3a42; padding: 8px; text-align: center;">
+            <div style="font-size: 10px; color: #00ff00; font-family: monospace; overflow: hidden; white-space: nowrap; margin-bottom: 6px;">
+                NOW PLAYING: BLINDING LIGHTS (SLOWED + REVERB)
+            </div>
+            
+            <!-- Прыгающий эквалайзер -->
+            <div id="eqContainer" style="height: 25px; display: flex; justify-content: center; align-items: flex-end; margin-bottom: 8px; opacity: 0.5;">
+                <div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div>
+            </div>
+
+            <!-- Интегрированный аудиоплеер -->
+            <iframe id="winampFrame" src="https://hitmoz.org" style="display:none; width:1px; height:1px; border:none;"></iframe>
+            <div style="display: flex; justify-content: center; gap: 6px;">
+                <button onclick="playWinamp()" style="background: #1e1e24; color: #00ff00; border: 2px solid; border-color: #3a3a42 #0a0a0a #0a0a0a #3a3a42; font-size: 10px; padding: 2px 8px; font-weight: bold;">PLAY</button>
+                <button onclick="pauseWinamp()" style="background: #1e1e24; color: #ff3333; border: 2px solid; border-color: #3a3a42 #0a0a0a #0a0a0a #3a3a42; font-size: 10px; padding: 2px 8px; font-weight: bold;">STOP</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let eqInterval;
+
+        function toggleWinamp() {
+            const player = document.getElementById("winampModal");
+            if (player.style.display === "none" || player.style.display === "") {
+                player.style.display = "block";
+            } else {
+                player.style.display = "none";
+                pauseWinamp();
+            }
+        }
+
+        function playWinamp() {
+            document.getElementById("winampFrame").src = "https://hitmoz.org";
+            document.getElementById("eqContainer").style.opacity = "1";
+            clearInterval(eqInterval);
+            eqInterval = setInterval(() => {
+                const bars = document.querySelectorAll(".equalizer-bar");
+                bars.forEach(bar => {
+                    const randomHeight = Math.floor(Math.random() * 20) + 4;
+                    bar.style.height = randomHeight + "px";
+                });
+            }, 100);
+        }
+
+        function pauseWinamp() {
+            document.getElementById("winampFrame").src = "";
+            document.getElementById("eqContainer").style.opacity = "0.5";
+            clearInterval(eqInterval);
+            const bars = document.querySelectorAll(".equalizer-bar");
+            bars.forEach(bar => bar.style.height = "5px");
+        }
+    </script>
 </html> 
