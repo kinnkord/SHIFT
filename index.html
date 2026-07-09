@@ -371,93 +371,75 @@
 
     window.addEventListener("keydown", (e) => { if (e.code === "Space" && document.getElementById('gameModal').style.display === 'block') { e.preventDefault(); jump(); } });
     canvas.addEventListener("click", jump);
-
-    function gameLoop() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        disk.velocity += disk.gravity;
-        disk.y += disk.velocity;
-
-        // РИСУЕМ РЕТРО-ДИСКЕТУ HANDMADE
-        ctx.save();
-        ctx.translate(disk.x, disk.y);
-        
-        // 1. Синий корпус дискеты со скошенным правым верхним углом
-        ctx.fillStyle = "#2244aa"; 
-        ctx.beginPath();
-        ctx.moveTo(-12, -12);
-        ctx.lineTo(6, -12);
-        ctx.lineTo(12, -6); // Тот самый скос 3.5 дискеты
-        ctx.lineTo(12, 12);
-        ctx.lineTo(-12, 12);
-        ctx.closePath();
-        ctx.fill();
-
-        // 2. Серебряная металлическая шторка сверху
-        ctx.fillStyle = "#aaaaaa";
-        ctx.fillRect(-6, -12, 8, 7);
-        ctx.fillStyle = "#333333"; // Прорезь на шторке
-        ctx.fillRect(-4, -10, 2, 4);
-
-        // 3. Белая наклейка-этикетка снизу
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(-9, -1, 18, 11);
-        
-        // Маленькие серые полосочки текста на наклейке
-        ctx.fillStyle = "#888888";
-        ctx.fillRect(-7, 2, 14, 1);
-        ctx.fillRect(-7, 5, 10, 1);
-        ctx.fillRect(-7, 8, 12, 1);
-
-        ctx.restore();
-
-        if (disk.y + 12 > canvas.height || disk.y - 12 < 0) { gameOver = true; }
-
-        // Трубы
-        if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 150) {
-            let gap = 110;
-            let topHeight = Math.random() * (canvas.height - gap - 60) + 30;
-            pipes.push({ x: canvas.width, top: topHeight, bottom: canvas.height - topHeight - gap });
-        }
-
-        for (let i = pipes.length - 1; i >= 0; i--) {
-            pipes[i].x -= 2;
-            ctx.fillStyle = "#252528";
-            ctx.strokeStyle = "#3a3a42";
-            ctx.lineWidth = 2;
+    
+           function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            ctx.fillRect(pipes[i].x, 0, 40, pipes[i].top);
-            ctx.strokeRect(pipes[i].x, 0, 40, pipes[i].top);
-            ctx.fillRect(pipes[i].x, canvas.height - pipes[i].bottom, 40, pipes[i].bottom);
-            ctx.strokeRect(pipes[i].x, canvas.height - pipes[i].bottom, 40, pipes[i].bottom);
+            // Новая сверхплавная физика: уменьшили скорость падения
+            disk.velocity += 0.17; 
+            disk.y += disk.velocity;
+            
+            ctx.save();
+            ctx.translate(disk.x, disk.y);
+            
+            // Отрисовка пиксельной дискеты
+            ctx.fillStyle = "#0022aa"; ctx.beginPath();
+            ctx.moveTo(-14, -14); ctx.lineTo(8, -14); ctx.lineTo(14, -8);
+            ctx.lineTo(14, 14); ctx.lineTo(-14, 14); ctx.closePath(); ctx.fill();
+            ctx.lineWidth = 1; ctx.strokeStyle = "#000055"; ctx.stroke();
+            ctx.fillStyle = "#888899"; ctx.fillRect(-6, -13, 10, 8);
+            ctx.fillStyle = "#bbbbcc"; ctx.fillRect(-2, -13, 2, 8);
+            ctx.fillStyle = "#ffffff"; ctx.fillRect(-10, -1, 20, 13);
+            ctx.fillStyle = "#888899"; ctx.fillRect(-8, 3, 16, 1); ctx.fillRect(-8, 7, 16, 1);
+            ctx.restore();
 
-            if (disk.x + 12 > pipes[i].x && disk.x - 12 < pipes[i].x + 40) {
-                if (disk.y - 12 < pipes[i].top || disk.y + 12 > canvas.height - pipes[i].bottom) { gameOver = true; }
+            if (disk.y + 14 > canvas.height || disk.y - 14 < 0) { gameOver = true; }
+
+            // Движение серых ретро-труб
+            if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 160) {
+                let gap = 120; // Сделали проход в трубах еще шире и удобнее
+                let topHeight = Math.random() * (canvas.height - gap - 60) + 30;
+                pipes.push({ x: canvas.width, top: topHeight, bottom: canvas.height - topHeight - gap });
             }
 
-            if (pipes[i].x === 50) { score++; }
-            if (pipes[i].x < -40) { pipes.splice(i, 1); }
-        }
+            for (let i = pipes.length - 1; i >= 0; i--) {
+                pipes[i].x -= 1.6; // Замедлили трубы, чтобы играть было комфортно
 
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "14px monospace";
-        ctx.fillText("SCORE: " + score, 15, 25);
+                ctx.fillStyle = "#1e1e24"; ctx.strokeStyle = "#3a3a42"; ctx.lineWidth = 2;
+                ctx.fillRect(pipes[i].x, 0, 40, pipes[i].top); ctx.strokeRect(pipes[i].x, 0, 40, pipes[i].top);
+                ctx.fillStyle = "#2a2a32"; ctx.fillRect(pipes[i].x - 3, pipes[i].top - 15, 46, 15); ctx.strokeRect(pipes[i].x - 3, pipes[i].top - 15, 46, 15);
+                ctx.fillStyle = "#1e1e24"; ctx.fillRect(pipes[i].x, canvas.height - pipes[i].bottom, 40, pipes[i].bottom); ctx.strokeRect(pipes[i].x, canvas.height - pipes[i].bottom, 40, pipes[i].bottom);
+                ctx.fillStyle = "#2a2a32"; ctx.fillRect(pipes[i].x - 3, canvas.height - pipes[i].bottom, 46, 15); ctx.strokeRect(pipes[i].x - 3, canvas.height - pipes[i].bottom, 46, 15);
 
-        if (gameOver) {
-            clearInterval(gameInterval);
-            ctx.fillStyle = "rgba(5,5,7,0.85)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#ff3333";
-            ctx.font = "bold 18px monospace";
-            ctx.fillText("SYSTEM OVERLOAD", 75, 150);
-            ctx.fillStyle = "#71717a";
-            ctx.font = "12px monospace";
-            ctx.fillText("SCORE: " + score, 120, 180);
-            ctx.fillStyle = "#ffffff";
-            ctx.font = "11px monospace";
-            ctx.fillText("CLICK SCREEN TO REBOOT.EXE", 60, 220);
+                if (disk.x + 11 > pipes[i].x && disk.x - 11 < pipes[i].x + 40) {
+                    if (disk.y - 11 < pipes[i].top || disk.y + 11 > canvas.height - pipes[i].bottom) { gameOver = true; }
+                }
+
+                if (pipes[i].x === 50) { score++; }
+                if (pipes[i].x < -40) { pipes.splice(i, 1); }
+            }
+
+            // Вывод текущих очков и рекорда из памяти браузера
+            let highscore = localStorage.getItem("flop_highscore") || 0;
+            ctx.fillStyle = "#71717a"; ctx.font = "11px monospace";
+            ctx.fillText("HIGH: " + highscore, 15, 20);
+            ctx.fillStyle = "#ffffff"; ctx.font = "14px monospace";
+            ctx.fillText("SCORE: " + score, 15, 40);
+
+            if (gameOver) {
+                clearInterval(gameInterval);
+                if (score > highscore) {
+                    localStorage.setItem("flop_highscore", score);
+                    highscore = score;
+                }
+                ctx.fillStyle = "rgba(5,5,7,0.85)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#ff3333"; ctx.font = "bold 16px monospace"; ctx.fillText("SYSTEM OVERLOAD", 75, 130);
+                ctx.fillStyle = "#ffffff"; ctx.font = "13px monospace"; ctx.fillText("YOUR SCORE: " + score, 100, 165);
+                ctx.fillStyle = "#00ff00"; ctx.font = "13px monospace"; ctx.fillText("BEST RECORD: " + highscore, 95, 190);
+                ctx.fillStyle = "#ffffff"; ctx.font = "11px monospace"; ctx.fillText("CLICK SCREEN TO REBOOT.EXE", 60, 240);
+            }
         }
-    }
-</script>
+    </script>
 </body>
 </html>
+ 
