@@ -704,13 +704,13 @@
                 NOW PLAYING: BLINDING LIGHTS (SLOWED + REVERB)
             </div>
             
-            <!-- Прыгающий эквалайзер -->
+                  <!-- Прыгающий эквалайзер -->
             <div id="eqContainer" style="height: 25px; display: flex; justify-content: center; align-items: flex-end; margin-bottom: 8px; opacity: 0.5;">
                 <div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div>
             </div>
 
-            <!-- Интегрированный аудиоплеер -->
-            <iframe id="winampFrame" src="https://hitmoz.org" style="display:none; width:1px; height:1px; border:none;"></iframe>
+            <!-- Твой личный загруженный аудио-файл -->
+            <audio id="winampAudio" src="music.mp3" loop></audio>
             <div style="display: flex; justify-content: center; gap: 6px;">
                 <button onclick="playWinamp()" style="background: #1e1e24; color: #00ff00; border: 2px solid; border-color: #3a3a42 #0a0a0a #0a0a0a #3a3a42; font-size: 10px; padding: 2px 8px; font-weight: bold;">PLAY</button>
                 <button onclick="pauseWinamp()" style="background: #1e1e24; color: #ff3333; border: 2px solid; border-color: #3a3a42 #0a0a0a #0a0a0a #3a3a42; font-size: 10px; padding: 2px 8px; font-weight: bold;">STOP</button>
@@ -720,6 +720,7 @@
 
     <script>
         let eqInterval;
+        const audio = document.getElementById("winampAudio");
 
         function toggleWinamp() {
             const player = document.getElementById("winampModal");
@@ -732,7 +733,7 @@
         }
 
         function playWinamp() {
-            document.getElementById("winampFrame").src = "https://hitmoz.org";
+            audio.play().catch(err => console.log("Нужен клик по сайту"));
             document.getElementById("eqContainer").style.opacity = "1";
             clearInterval(eqInterval);
             eqInterval = setInterval(() => {
@@ -745,11 +746,13 @@
         }
 
         function pauseWinamp() {
-            document.getElementById("winampFrame").src = "";
+            audio.pause();
             document.getElementById("eqContainer").style.opacity = "0.5";
             clearInterval(eqInterval);
             const bars = document.querySelectorAll(".equalizer-bar");
             bars.forEach(bar => bar.style.height = "5px");
         }
     </script>
-</html> 
+</body>
+</html>
+      
