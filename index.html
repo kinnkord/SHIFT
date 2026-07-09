@@ -144,30 +144,27 @@
         .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; max-width: 960px; margin: 0 auto; }
                 /* Окно плеера Winamp в углу */
         .winamp-player {
-            position: fixed;
-            bottom: 50px;
-            right: 20px;
-            width: 240px;
-            background: #151518;
-            border: 3px solid;
-            border-color: #4a4a52 #000000 #000000 #4a4a52;
-            z-index: 1000;
-            display: none;
-            box-shadow: 0px 0px 20px #000;
-            padding: 8px;
-        }
-
-        /* Полоски прыгающего эквалайзера */
-        .equalizer-bar {
-            width: 4px;
-            height: 5px;
-            background: #00ff00;
-            margin: 0 1px;
-            display: inline-block;
-            transition: height 0.1s ease;
-        }
-
-
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 240px;
+    height: calc(100vh - 100px); /* Вытянет окно сверху до панели задач */
+    background: #151518;
+    border: 3px solid;
+    border-color: #4a4a52 #000000 #000000 #4a4a52;
+    z-index: 1000;
+    display: none;
+    box-shadow: 0px 0px 20px #000;
+    padding: 8px;
+    box-sizing: border-box; /* Чтобы внутренние отступы не ломали высоту */
+}
+                        /* Полоски прыгающего эквалайзера во всю ширину панели */
+            height: 100%; /* Заставит полоски прыгать во всю высоту */
+    background: #00ff00;
+    margin: 0 2px;
+    transition: height 0.08s ease;
+    box-shadow: 0 0 10px #00ff00; /* Добавляем сочный неоновый свет */
+        
         .product-card { 
             background: #121215; 
             border: 2px solid;
@@ -705,7 +702,7 @@
             </div>
             
                   <!-- Прыгающий эквалайзер -->
-            <div id="eqContainer" style="height: 25px; display: flex; justify-content: center; align-items: flex-end; margin-bottom: 8px; opacity: 0.5;">
+            <div id="eqContainer" style="height: 380px; display: flex; justify-content: center; align-items: flex-end; margin-bottom: 8px; opacity: 0.5;">
                 <div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div>
             </div>
 
