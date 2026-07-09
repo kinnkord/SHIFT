@@ -399,7 +399,7 @@
             if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 160) {
                 let gap = 120; // Сделали проход в трубах еще шире и удобнее
                 let topHeight = Math.random() * (canvas.height - gap - 60) + 30;
-                pipes.push({ x: canvas.width, top: topHeight, bottom: canvas.height - topHeight - gap });
+               pipes.push({ x: canvas.width, top: topHeight, bottom: canvas.height - topHeight - gap, passed: false });
             }
 
             for (let i = pipes.length - 1; i >= 0; i--) {
