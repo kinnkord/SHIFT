@@ -464,7 +464,41 @@
             ctx.fillText("SCORE: " + score, 15, 25);
         }
 
-        function triggerGameOver() {
+                function toggleGame() {
+            const gameEl = document.getElementById('gameModal');
+            if (gameEl.style.display === 'none') {
+                gameEl.style.display = 'block';
+                document.getElementById('scoreModal').style.display = 'block';
+                updateStatsDisplay();
+                initGame();
+            } else {
+                closeGame();
+            }
+        }
+
+        function closeGame() {
+            document.getElementById('gameModal').style.display = 'none';
+            document.getElementById('scoreModal').style.display = 'none';
+            clearInterval(gameInterval);
+        }
+
+        function updateStatsDisplay() {
+            let highscore = localStorage.getItem("flop_highscore") || 0;
+            document.getElementById('liveScoreLabel').innerText = score || 0;
+            document.getElementById('liveBestLabel').innerText = highscore;
+        }
+
+        function initGame() {
+            disk = { x: 50, y: 180, velocity: 0, gravity: 0.17, jump: -4.1, w: 16, h: 16 };
+            pipes = []; score = 0; gameOver = false;
+            updateStatsDisplay();
+            clearInterval(gameInterval);
+            gameInterval = setInterval(gameLoop, 1000 / 60);
+        }
+
+        function jump() { if (!gameOver) disk.velocity = disk.jump; }
+
+            function triggerGameOver() {
             gameOver = true;
             clearInterval(gameInterval);
             
