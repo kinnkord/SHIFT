@@ -130,7 +130,15 @@
             text-transform: uppercase;
         }
         .btn:hover, .buy-btn:hover { background: #ffffff; color: #000000; border-color: #ffffff; }
-
+                .trail-pixel {
+            position: fixed;
+            width: 5px;
+            height: 5px;
+            pointer-events: none;
+            z-index: 99999;
+            transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+        }
+        
         .products-section { padding: 40px 20px; background: #09090b; text-align: center; border-top: 1px solid #121215; }
         .section-title { font-size: 14px; font-weight: bold; margin-bottom: 30px; text-align: left; border-bottom: 2px dashed #27272a; padding-bottom: 5px; color: #71717a; letter-spacing: 1px;}
         .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; max-width: 600px; margin: 0 auto; }
@@ -628,6 +636,27 @@
             ctx.fillStyle = "#ffffff"; ctx.font = "11px monospace"; ctx.fillText("CLICK SCREEN TO REBOOT.EXE", 60, 240);
         }
     </script>
+    <script>
+        const windowsColors = ["#ff3333", "#00cc00", "#0044ff", "#ffcc00"];
+
+        window.addEventListener("mousemove", (e) => {
+            const pixel = document.createElement("div");
+            pixel.className = "trail-pixel";
+            pixel.style.backgroundColor = windowsColors[Math.floor(Math.random() * windowsColors.length)];
+            pixel.style.left = e.clientX + "px";
+            pixel.style.top = e.clientY + "px";
+            document.body.appendChild(pixel);
+
+            setTimeout(() => {
+                const randomX = (Math.random() - 0.5) * 30;
+                const randomY = (Math.random() - 0.5) * 30;
+                pixel.style.transform = "translate(" + randomX + "px, " + randomY + "px) scale(0)";
+                pixel.style.opacity = "0";
+            }, 50);
+
+            setTimeout(() => { pixel.remove(); }, 500);
+        });
+    </script>
+
 </body>
 </html>
-
