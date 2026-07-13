@@ -1,697 +1,1248 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en" translate="no">
-<head>  
-    <meta charset="UTF-8">
-    <meta name="google" content="notranslate">
-    <title>SHIFT — Digital Nostalgia OS</title>
-    <style>
-        body { 
-            margin: 0; 
-            font-family: "Courier New", Courier, monospace; 
-            background-color: #050507; 
-            color: #ffffff; 
-            padding: 20px 20px 60px 20px; 
-            position: relative;
-            min-height: 100vh;
-            box-sizing: border-box;
-            cursor: url('https://alexmeub.com'), auto;
+<head>
+<meta charset="UTF-8">
+<meta name="google" content="notranslate">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-            background-image: 
-                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px),
-                linear-gradient(0deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-            background-size: 40px 40px;
-            overflow-x: hidden;
-        }
+<title>SHIFT — Digital Nostalgia OS</title>
 
-        a, button, .shortcut {
-            cursor: url('https://alexmeub.com'), pointer !important;
-        }
-
-        .window {
-            background: #121215; 
-            border: 3px solid;
-            border-color: #3a3a42 #000000 #000000 #3a3a42; 
-            box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.9);
-            max-width: 1100px;
-            margin: 20px auto;
-            position: relative;
-            z-index: 10;
-        }
-
-        .title-bar {
-            background: linear-gradient(90deg, #151522, #2d2d44);
-            color: #ffffff;
-            padding: 6px 12px;
-            font-weight: bold;
-            font-size: 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #000000;
-        }
-
-        .title-bar-controls button {
-            background: #1e1e24;
-            color: #ffffff;
-            border: 2px solid;
-            border-color: #3a3a42 #0a0a0a #0a0a0a #3a3a42;
-            font-weight: bold;
-            padding: 1px 6px;
-        }
-
-        header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 15px 20px; 
-            border-bottom: 2px solid #000000;
-            background: #09090b;
-        }
-        .logo { font-size: 22px; font-weight: bold; text-transform: uppercase; letter-spacing: 3px; color: #ffffff; }
-        nav a { text-decoration: none; color: #71717a; margin-left: 20px; font-size: 14px; font-weight: bold; }
-        nav a:hover { background: #ffffff; color: #000000; }
-
-        .hero-layout {
-            display: grid;
-            grid-template-columns: 1fr 240px; 
-            border-bottom: 2px solid #000000;
-            background: #121215;
-        }
-
-        .hero { 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            text-align: center; 
-            padding: 40px 20px; 
-            background: #121215;
-        }
-        .hero img { max-width: 100%; height: 420px; object-fit: cover; border: 3px solid #000000; box-shadow: 6px 6px 0px #000000; margin-bottom: 25px; }
-        .hero h1 { font-size: 26px; margin: 0 0 10px 0; text-transform: uppercase; color: #ffffff; letter-spacing: 2px; }
-        .hero p { font-size: 13px; max-width: 500px; margin-bottom: 25px; color: #71717a; line-height: 1.5; }
-
-        .right-sidebar {
-            display: flex;
-            flex-direction: column;
-            border-left: 2px solid #000000;
-            background: #0e0e11;
-        }
-
-        .side-panel {
-            padding: 20px 15px;
-            font-size: 11px;
-            color: #71717a;
-            box-sizing: border-box;
-            flex: 1;
-        }
-        .side-panel.top {
-            border-bottom: 2px solid #000000;
-        }
-
-        .panel-title {
-            font-weight: bold;
-            color: #ffffff;
-            margin-bottom: 12px;
-            border-bottom: 1px solid #3a3a42;
-            padding-bottom: 4px;
-            text-transform: uppercase;
-        }
-        .meta-line { margin-bottom: 6px; line-height: 1.4; white-space: pre; }
-
-        .btn, .buy-btn { 
-            display: inline-block; 
-            background: #1e1e24; 
-            color: #ffffff; 
-            padding: 12px 35px; 
-            text-decoration: none; 
-            font-weight: bold; 
-            border: 2px solid;
-            border-color: #3a3a42 #0a0a0a #0a0a0a #3a3a42;
-            text-transform: uppercase;
-        }
-        .btn:hover, .buy-btn:hover { background: #ffffff; color: #000000; border-color: #ffffff; }
-                .trail-pixel {
-            position: fixed;
-            width: 5px;
-            height: 5px;
-            pointer-events: none;
-            z-index: 99999;
-            transition: transform 0.5s ease-out, opacity 0.5s ease-out;
-        }
-        
-        .products-section { padding: 40px 20px; background: #09090b; text-align: center; border-top: 1px solid #121215; }
-        .section-title { font-size: 14px; font-weight: bold; margin-bottom: 30px; text-align: left; border-bottom: 2px dashed #27272a; padding-bottom: 5px; color: #71717a; letter-spacing: 1px;}
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; max-width: 960px; margin: 0 auto; }
-                     /* Аккуратное компактное ретро-окно плеера */
-       .winamp-player {
-    position: fixed;
-    bottom: 40px; /* Встанет ровно на верхнюю границу панели задач */
-    left: 0;
-    width: 100%; /* Растянется на всю ширину экрана */
-    height: 60px; /* Высота прыжков полосок */
-    z-index: 99999;
-    display: none; /* Включится при нажатии PLAY */
-    pointer-events: none; /* Чтобы полоски не мешали кликать по сайту */
-    padding: 0;
-    box-sizing: border-box;
+<style>
+*{
+    box-sizing:border-box;
 }
- .equalizer-bar {
-    flex: 1; /* Равномерно распределит полосы по всей ширине монитора */
-    height: 0px;
-    background: #00ff00;
-    margin: 0 1px;
-    transition: height 0.08s ease;
-    box-shadow: 0 0 12px #00ff00; /* Яркий неоновый свет вверх */
+
+html{
+    scroll-behavior:smooth;
 }
-        .product-card { 
-            background: #121215; 
-            border: 2px solid;
-            border-color: #3a3a42 #0a0a0a #0a0a0a #3a3a42;
-            padding: 12px; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: space-between; 
-            text-align: left;
-        }
-        .product-card img { width: 100%; height: 320px; object-fit: cover; border: 2px solid #000000; margin-bottom: 12px; background: #1a1a1e; }
-        .product-title { font-size: 13px; font-weight: bold; margin-bottom: 8px; text-transform: uppercase; color: #ffffff; }
-        .product-price { font-size: 13px; margin-bottom: 15px; color: #71717a; font-weight: bold; }
 
-        .product-card.empty-slot img { object-fit: contain; padding: 40px; box-sizing: border-box; background: #151518; border: 2px dashed #3a3a42; opacity: 0.3;}
-        .product-card.empty-slot .product-title { color: #4b4b54; }
+body{
+    margin:0;
+    padding:20px 20px 60px;
+    min-height:100vh;
 
-        /* ОКНО ЗАКАЗА */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 1000;
-            display: none; 
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-box {
-            background: #1a1a1e;
-            border: 3px solid;
-            border-color: #4a4a52 #000000 #000000 #4a4a52;
-            width: 380px;
-            box-shadow: 0px 0px 25px #000;
-        }
-        .modal-body { padding: 20px; text-align: left; }
-        .modal-text { font-size: 13px; margin-bottom: 15px; color: #a0a0a8; }
-        .modal-input {
-            width: 100%; background: #09090b; border: 2px solid #3a3a42;
-            padding: 10px; color: #fff; font-family: monospace;
-            box-sizing: border-box; margin-bottom: 20px;
-        }
+    font-family:"Courier New", monospace;
+    color:#ffffff;
+    background-color:#050507;
 
-        /* ИГРОВОЕ ОКНО FLAPPY_DISK.EXE (СТОИТ СЛЕВА ВНИЗУ НАД ПАНЕЛЬЮ ЗАДАЧ) */
-        .game-window {
-            position: fixed;
-            bottom: 45px;
-            left: 20px;
-            width: 320px;
-            background: #1a1a1e;
-            border: 3px solid;
-            border-color: #3a3a42 #000000 #000000 #3a3a42;
-            box-shadow: 0px 0px 20px rgba(0,0,0,0.8);
-            z-index: 500;
-            display: none; /* Открывается только по кнопке старт */
-        }
-        #gameCanvas {
-            background: #09090b;
-            display: block;
-            border-top: 2px solid #000000;
-        }
+    background-image:
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0.02) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            0deg,
+            rgba(255,255,255,0.02) 1px,
+            transparent 1px
+        );
 
-        /* Панель задач */
-        .taskbar {
-            position: fixed;
-            bottom: 0; left: 0; width: 100%; height: 40px;
-            background: #121215; border-top: 3px solid #3a3a42;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 10px; box-sizing: border-box; z-index: 100;
-        }
-        .start-btn {
-            background: #1e1e24; color: #ffffff; font-weight: bold;
-            border: 2px solid; border-color: #3a3a42 #0a0a0a #0a0a0a #3a3a42;
-            padding: 2px 14px; font-size: 12px; text-transform: uppercase;
-        }
-        .start-btn.active {
-            border-color: #0a0a0a #3a3a42 #3a3a42 #0a0a0a;
-            padding: 3px 13px 1px 15px;
-        }
-        .tray-clock {
-            border: 2px solid; border-color: #0a0a0a #3a3a42 #3a3a42 #0a0a0a;
-            padding: 4px 10px; font-size: 12px; color: #71717a; background: #09090b;
-        }
+    background-size:40px 40px;
+    overflow-x:hidden;
+    position:relative;
+}
+
+.window{
+    background:#121215;
+
+    border:3px solid;
+    border-color:
+        #3a3a42
+        #000000
+        #000000
+        #3a3a42;
+
+    box-shadow:
+        0 0 30px rgba(0,0,0,.9);
+
+    max-width:1100px;
+    margin:20px auto;
+}
+
+.title-bar{
+    background:
+        linear-gradient(
+            90deg,
+            #151522,
+            #2d2d44
+        );
+
+    border-bottom:2px solid #000;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:6px 12px;
+
+    font-size:14px;
+    font-weight:bold;
+}
+
+.title-bar-controls{
+    display:flex;
+    gap:4px;
+}
+
+.title-bar-controls button{
+    background:#1e1e24;
+    color:#fff;
+
+    border:2px solid;
+    border-color:
+        #3a3a42
+        #0a0a0a
+        #0a0a0a
+        #3a3a42;
+
+    font-family:inherit;
+    font-weight:bold;
+
+    width:26px;
+    height:22px;
+}
+
+header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:15px 20px;
+
+    background:#09090b;
+    border-bottom:2px solid #000;
+}
+
+.logo{
+    font-size:22px;
+    font-weight:bold;
+    letter-spacing:3px;
+}
+
+nav{
+    display:flex;
+    gap:20px;
+}
+
+nav a{
+    color:#71717a;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:bold;
+}
+
+nav a:hover{
+    color:#000;
+    background:#fff;
+}
+
+.hero-layout{
+    display:grid;
+    grid-template-columns:1fr 240px;
+    background:#121215;
+}
+
+.hero{
+    padding:40px 20px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+}
+
+.hero img{
+    width:100%;
+    max-width:600px;
+    height:420px;
+
+    object-fit:cover;
+
+    border:3px solid #000;
+    box-shadow:6px 6px 0 #000;
+
+    margin-bottom:25px;
+}
+
+.hero h1{
+    margin:0 0 10px;
+
+    font-size:26px;
+    letter-spacing:2px;
+}
+
+.hero p{
+    max-width:500px;
+    margin-bottom:25px;
+
+    color:#71717a;
+    line-height:1.5;
+    font-size:13px;
+}
+
+.btn,
+.buy-btn{
+    display:inline-block;
+
+    background:#1e1e24;
+    color:#fff;
+
+    border:2px solid;
+    border-color:
+        #3a3a42
+        #0a0a0a
+        #0a0a0a
+        #3a3a42;
+
+    padding:12px 35px;
+
+    font-family:inherit;
+    font-weight:bold;
+
+    text-decoration:none;
+    text-transform:uppercase;
+}
+
+.btn:hover,
+.buy-btn:hover{
+    background:#fff;
+    color:#000;
+    border-color:#fff;
+}
+
+.right-sidebar{
+    background:#0e0e11;
+    border-left:2px solid #000;
+
+    display:flex;
+    flex-direction:column;
+}
+
+.side-panel{
+    padding:20px 15px;
+    color:#71717a;
+    font-size:11px;
+}
+
+.panel-title{
+    color:#fff;
+    font-weight:bold;
+
+    border-bottom:1px solid #3a3a42;
+
+    margin-bottom:12px;
+    padding-bottom:4px;
+
+    text-transform:uppercase;
+}
+
+.meta-line{
+    margin-bottom:6px;
+    line-height:1.4;
+}
+  .products-section{
+    background:#09090b;
+    border-top:1px solid #121215;
+
+    padding:40px 20px;
+    text-align:center;
+}
+
+.section-title{
+    text-align:left;
+
+    color:#71717a;
+    font-size:14px;
+    font-weight:bold;
+    letter-spacing:1px;
+
+    border-bottom:2px dashed #27272a;
+
+    margin-bottom:30px;
+    padding-bottom:5px;
+}
+
+.products-grid{
+    max-width:960px;
+    margin:0 auto;
+
+    display:grid;
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(260px,1fr)
+        );
+
+    gap:20px;
+}
+
+.product-card{
+    background:#121215;
+
+    border:2px solid;
+    border-color:
+        #3a3a42
+        #0a0a0a
+        #0a0a0a
+        #3a3a42;
+
+    padding:12px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+
+    text-align:left;
+}
+
+.product-card img{
+    width:100%;
+    height:320px;
+
+    object-fit:cover;
+
+    background:#1a1a1e;
+    border:2px solid #000;
+
+    margin-bottom:12px;
+}
+
+.product-title{
+    color:#fff;
+
+    font-size:13px;
+    font-weight:bold;
+
+    margin-bottom:8px;
+
+    text-transform:uppercase;
+}
+
+.product-price{
+    color:#71717a;
+
+    font-size:13px;
+    font-weight:bold;
+
+    margin-bottom:15px;
+}
+
+.empty-slot img{
+    object-fit:contain;
+
+    padding:40px;
+
+    background:#151518;
+    border:2px dashed #3a3a42;
+
+    opacity:.3;
+}
+
+.empty-slot .product-title{
+    color:#4b4b54;
+}
+
+.modal-overlay{
+    position:fixed;
+    inset:0;
+
+    background:rgba(0,0,0,.75);
+
+    display:none;
+    justify-content:center;
+    align-items:center;
+
+    z-index:9999;
+}
+
+.modal-box{
+    width:380px;
+
+    background:#1a1a1e;
+
+    border:3px solid;
+    border-color:
+        #4a4a52
+        #000
+        #000
+        #4a4a52;
+
+    box-shadow:0 0 25px #000;
+}
+
+.modal-body{
+    padding:20px;
+}
+
+.modal-text{
+    color:#a0a0a8;
+    font-size:13px;
+
+    margin-bottom:15px;
+}
+
+.modal-input{
+    width:100%;
+
+    background:#09090b;
+    color:#fff;
+
+    border:2px solid #3a3a42;
+
+    padding:10px;
+    margin-bottom:20px;
+
+    font-family:inherit;
+}
+
+.game-window{
+    position:fixed;
+    left:20px;
+    bottom:50px;
+
+    width:320px;
+
+    display:none;
+
+    background:#1a1a1e;
+
+    border:3px solid;
+    border-color:
+        #4a4a52
+        #000
+        #000
+        #4a4a52;
+
+    box-shadow:0 0 25px rgba(0,0,0,.9);
+
+    z-index:900;
+}
+
+#gameCanvas{
+    display:block;
+
+    background:#09090b;
+    border:2px solid #3a3a42;
+}
+
+#scoreModal{
+    left:20px;
+    bottom:430px;
+
+    height:320px;
+}
+
+.stats-body{
+    height:calc(100% - 30px);
+
+    background:#09090b;
+
+    padding:25px 15px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    text-align:center;
+}
+
+.trophy-glow{
+    font-size:70px;
+    animation:pulse 1.5s infinite;
+}
+
+.stat-glow-text{
+    font-size:15px;
+    color:#ffffff;
+}
+
+#liveScoreLabel{
+    color:#ffff00;
+    font-size:20px;
+}
+
+#liveBestLabel{
+    color:#00ff00;
+    font-size:20
     </style>
 </head>
 <body>
 
-    <div class="window">
-        <div class="title-bar">
-            <div class="title-bar-text">📁 C:\shift_store\core.exe</div>
-            <div class="title-bar-controls">
-                <button>_</button> <button>🗖</button> <button>X</button>
+<div class="window">
+    <div class="title-bar">
+        <div class="title-bar-text">
+            📁 C:\shift_store\core.exe
+        </div>
+
+        <div class="title-bar-controls">
+            <button>_</button>
+            <button>🗖</button>
+            <button>X</button>
+        </div>
+    </div>
+
+    <header>
+        <div class="logo">SHIFT®</div>
+
+        <nav>
+            <a href="#catalog">[Shop]</a>
+            <a href="javascript:void(0)" onclick="toggleWinamp()">
+                [Winamp_Player]
+            </a>
+            <a href="#">
+                [System_Info]
+            </a>
+        </nav>
+    </header>
+
+    <div class="hero-layout">
+
+        <section class="hero">
+            <img
+                src="hoodie.png"
+                alt="SHIFT Clothing"
+            >
+
+            <h1>DROP: SYSTEM-1998</h1>
+
+            <p>
+                Digital nostalgia and heavy cyber-brutalism aesthetics.
+                Oversized heavy-weight cotton clothing tailored for the grid.
+            </p>
+
+            <a
+                href="#catalog"
+                class="btn"
+            >
+                OPEN_CATALOG.BAT
+            </a>
+        </section>
+
+        <div class="right-sidebar">
+            <div class="side-panel">
+
+                <div class="panel-title">
+                    > SYS_INFO
+                </div>
+
+                <div class="meta-line">
+                    STATUS: ACTIVE
+                </div>
+
+                <div class="meta-line">
+                    HOST: LOCALGRID
+                </div>
+
+                <div class="meta-line">
+                    CORE: V.1998
+                </div>
+
+                <div class="meta-line">
+                    BPP: 16-BIT
+                </div>
+
+                <div class="meta-line">
+                    SIZE: 4.12 MB
+                </div>
+
+                <div class="meta-line">
+                    PACKETS: OK
+                </div>
+
             </div>
         </div>
 
-        <header>
-            <div class="logo">SHIFT®</div>
-            <nav>
-                <a href="#catalog">[Shop]</a> <a href="javascript:void(0)" onclick="toggleWinamp()">[Winamp_Player]</a> <a href="#">[System_Info]</a>
-            </nav>
-        </header>
-
-        <div class="hero-layout">
-            <section class="hero">
-                <img src="hoodie.png" alt="SHIFT Clothing">
-                <h1>DROP: SYSTEM-1998</h1>
-                <p>Digital nostalgia and heavy cyber-brutalism aesthetics. Oversized heavy-weight cotton clothing tailored for the grid.</p>
-                <a href="#catalog" class="btn">OPEN_CATALOG.BAT</a>
-            </section>
-
-            <div class="right-sidebar">
-                <div class="side-panel top">
-                    <div class="panel-title">> Sys_Info</div>
-                    <div class="meta-line">STATUS: ACTIVE</div>
-                    <div class="meta-line">HOST: LOCALGRID</div>
-                    <div class="meta-line">CORE: V.1998</div>
-                    <div class="meta-line">BPP: 16-BIT</div>
-                    <div class="meta-line">SIZE: 4.12 MB</div>
-                    <div class="meta-line">PACKETS: OK</div>
-                </div>
-        </div>
     </div>
-    <!-- Витрина каталога (теперь она ровно внизу) -->
-    <section class="products-section" id="catalog">
-        <div class="section-title">SELECT_ITEM_TO_LOAD:</div>
+
+    <section
+        class="products-section"
+        id="catalog"
+    >
+
+        <div class="section-title">
+            SELECT_ITEM_TO_LOAD:
+        </div>
+
         <div class="products-grid">
 
-            <div class="product-card">
-                <img src="hoodie2.png" alt="Heavy Hoodie Alt">
-                <div>
-                    <div class="product-title">Heavy Hoodie / System-1998</div>
-                    <div class="product-price">6 500 RUB</div>
-                </div>
-                <button class="buy-btn" onclick="openOrder('Heavy Hoodie / System-1998')">BUY_NOW</button>
-            </div>
-                <div class="product-card">
-                    <img src="tee.png" alt="Oversize Tee Anti-Aero">
-                    <div>
-                        <div class="product-title">Oversize Tee / Dark Aero Core</div>
-                        <div class="product-price">3 900 RUB</div>
-                    </div>
-                    <button class="buy-btn" onclick="openOrder('Oversize Tee / Dark Aero Core')">BUY_NOW</button>
-                </div>
-                            <div class="product-card empty-slot">
-                    <img src="shoes.png" alt="Cyber Sneakers" style="background: #151518; border: 2px dashed #3a3a42; opacity: 0.3;">
-                    <div>
-                        <div class="product-title">[EMPTY_SLOT] / Cyber Sneakers</div>
-                        <div class="product-price">-- --- RUB</div>
-                    </div>
-                    <button class="buy-btn" style="opacity: 0.3; pointer-events: none;">LOADING...</button>
-                </div>
+            <!-- ТВОИ КАРТОЧКИ ТОВАРОВ -->
+            <!-- Можешь вставить свои product-card сюда -->
 
         </div>
+
     </section>
+
 </div>
 
-<!-- ВСПЛЫВАЮЩЕЕ ОКНО ЗАКАЗА -->
-<div class="modal-overlay" id="orderModal">
+<div
+    class="modal-overlay"
+    id="orderModal"
+>
     <div class="modal-box">
+
         <div class="title-bar">
-            <div class="title-bar-text" id="modalProductTitle">order.exe</div>
+            <div
+                class="title-bar-text"
+                id="modalProductTitle"
+            >
+                ORDER.EXE
+            </div>
+
             <div class="title-bar-controls">
-                <button onclick="closeOrder()">X</button>
+                <button onclick="closeOrder()">
+                    X
+                </button>
             </div>
         </div>
+
         <div class="modal-body">
-            <div class="modal-text">ENTER YOUR TELEGRAM NICKNAME OR PHONE:</div>
-            <input type="text" class="modal-input" id="clientContact" placeholder="@username or +7...">
-            <button class="buy-btn" style="width: 100%;" onclick="sendOrder()">SUBMIT_ORDER.EXE</button>
+
+            <div class="modal-text">
+                ENTER YOUR TELEGRAM NICKNAME OR PHONE:
+            </div>
+
+            <input
+                id="clientContact"
+                class="modal-input"
+                type="text"
+                placeholder="@username or +7..."
+            >
+
+            <button
+                class="buy-btn"
+                style="width:100%;"
+                onclick="sendOrder()"
+            >
+                SUBMIT_ORDER.EXE
+            </button>
+
         </div>
+
     </div>
 </div>
 
-<!-- ВСПЛЫВАЮЩЕЕ ОКНО ИГРЫ FLAPPY DISK -->
-<div class="game-window" id="gameModal" style="display: none; position: fixed; bottom: 50px; left: 20px; z-index: 999; background: #1a1a1e; border: 3px solid; border-color: #4a4a52 #000000 #000000 #4a4a52; width: 320px; box-shadow: 0px 0px 25px #000;">
+<div
+    class="game-window"
+    id="gameModal"
+>
     <div class="title-bar">
-        <div class="title-bar-text">🕹️ FLAPPY_DISK.EXE</div>
-        <div class="title-bar-controls">
-            <button onclick="closeGame()">X</button>
+
+        <div class="title-bar-text">
+            🕹️ FLAPPY_DISK.EXE
         </div>
+
+        <div class="title-bar-controls">
+            <button onclick="closeGame()">
+                X
+            </button>
+        </div>
+
     </div>
-    <div style="padding: 10px; text-align: center;">
-        <canvas id="gameCanvas" width="300" height="350" style="background: #09090b; border: 2px solid #3a3a42; display: block;"></canvas>
-        <div style="font-size: 11px; color: #71717a; margin-top: 8px;">PRESS SPACE OR CLICK TO JUMP</div>
+
+    <div
+        style="
+            padding:10px;
+            text-align:center;
+        "
+    >
+
+        <canvas
+            id="gameCanvas"
+            width="300"
+            height="350"
+        ></canvas>
+
+        <div
+            style="
+                font-size:11px;
+                color:#71717a;
+                margin-top:8px;
+            "
+        >
+            PRESS SPACE OR CLICK TO JUMP
+        </div>
+
     </div>
 </div>
 
-<!-- Панель задач -->
+<div
+    class="game-window"
+    id="scoreModal"
+>
+
+    <div class="title-bar">
+        <div class="title-bar-text">
+            🏆 PROFILE_STATS.LOG
+        </div>
+
+        <div class="title-bar-controls">
+            <button onclick="closeGame()">
+                X
+            </button>
+        </div>
+    </div>
+
+    <div class="stats-body">
+
+        <div class="trophy-glow">
+            🏆
+        </div>
+
+        <div class="stat-glow-text">
+            YOUR SCORE:
+            <span id="liveScoreLabel">0</span>
+        </div>
+
+        <div
+            class="stat-glow-text"
+            style="margin-top:15px;"
+        >
+            BEST RECORD:
+            <span id="liveBestLabel">0</span>
+        </div>
+
+    </div>
+
+</div>
+
+<div
+    class="winamp-player"
+    id="winampModal"
+>
+    <div id="eqContainer"></div>
+
+    <audio
+        id="winampAudio"
+        src="music.mp3"
+        loop
+    ></audio>
+</div>
+
 <div class="taskbar">
-    <button class="start-btn" onclick="toggleGame()">Start</button>
-    <div class="tray-clock" id="clock">00:00</div>
+
+    <button
+        class="start-btn"
+        onclick="toggleGame()"
+    >
+        Start
+    </button>
+
+    <div
+        class="tray-clock"
+        id="clock"
+    >
+        00:00
+    </div>
+
 </div>
 
 <script>
-    let currentItem = "";
 
-    function openOrder(itemName) {
-        currentItem = itemName;
-        document.getElementById('modalProductTitle').innerText = "ORDER: " + itemName;
-        document.getElementById('orderModal').style.display = 'flex';
+let currentItem = "";
+
+function openOrder(item) {
+    currentItem = item;
+
+    document.getElementById(
+        "modalProductTitle"
+    ).innerText =
+        "ORDER: " + item;
+
+    document.getElementById(
+        "orderModal"
+    ).style.display = "flex";
+}
+
+function closeOrder() {
+    document.getElementById(
+        "orderModal"
+    ).style.display = "none";
+}
+
+function sendOrder() {
+    const contact =
+        document.getElementById(
+            "clientContact"
+        ).value.trim();
+
+    if (!contact) {
+        alert(
+            "PLEASE FILL THE FIELD!"
+        );
+        return;
     }
 
-    function closeOrder() { document.getElementById('orderModal').style.display = 'none'; }
+    alert(
+        "ORDER SENT! (SIMULATION)"
+    );
 
-    function updateClock() {
-        const now = new Date();
-        const timeString = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-        document.getElementById('clock').innerText = timeString;
+    closeOrder();
+
+    document.getElementById(
+        "clientContact"
+    ).value = "";
+}
+
+function updateClock() {
+    const now = new Date();
+
+    document.getElementById(
+        "clock"
+    ).innerText =
+        now.toLocaleTimeString(
+            "ru-RU",
+            {
+                hour: "2-digit",
+                minute: "2-digit"
+            }
+        );
+}
+
+setInterval(
+    updateClock,
+    1000
+);
+
+updateClock();
+
+function toggleWinamp() {
+
+    const player =
+        document.getElementById(
+            "winampModal"
+        );
+
+    const audio =
+        document.getElementById(
+            "winampAudio"
+        );
+
+    const eq =
+        document.getElementById(
+            "eqContainer"
+        );
+
+    if (
+        player.style.display ===
+        "flex"
+    ) {
+        player.style.display =
+            "none";
+
+        eq.style.opacity = "0";
+
+        audio.pause();
+
+        return;
     }
-    setInterval(updateClock, 1000);
-    updateClock();
 
-    function sendOrder() {
-        const contact = document.getElementById('clientContact').value;
-        if(!contact) { alert('ПОЖАЛУЙСТА, ЗАПОЛНИТЕ ПОЛЕ!'); return; }
-        alert('ЗАКАЗ УСПЕШНО ОФОРМЛЕН! (Режим симуляции)');
-        closeOrder();
-        document.getElementById('clientContact').value = "";
-    }
+    player.style.display =
+        "flex";
 
-    // ИГРА FLAPPY DISK С ДЕТАЛИЗИРОВАННОЙ ДИСКЕТОЙ
+    eq.style.opacity = "1";
+
+    audio.play();
+}
+
+for (
+    let i = 0;
+    i < 45;
+    i++
+) {
+    const bar =
+        document.createElement(
+            "div"
+        );
+
+    bar.className =
+        "equalizer-bar";
+
+    document
+        .getElementById(
+            "eqContainer"
+        )
+        .appendChild(bar);
+}
+
+setInterval(() => {
+
+    document
+        .querySelectorAll(
+            ".equalizer-bar"
+        )
+        .forEach(bar => {
+
+            bar.style.height =
+                Math.random() *
+                    65 +
+                "px";
+
+        });
+
+}, 80);
+
     const canvas = document.getElementById("gameCanvas");
-    const ctx = canvas.getContext("2d");
-    let gameInterval;
-    let disk, pipes, score, gameOver;
+const ctx = canvas.getContext("2d");
 
-    function toggleGame() {
-        const el = document.getElementById('gameModal');
-        if (el.style.display === 'none') { el.style.display = 'block'; initGame(); } else { closeGame(); }
+let gameInterval;
+let disk;
+let pipes;
+let score;
+let gameOver;
+
+function toggleGame() {
+    const game =
+        document.getElementById(
+            "gameModal"
+        );
+
+    const stats =
+        document.getElementById(
+            "scoreModal"
+        );
+
+    if (
+        game.style.display ===
+        "block"
+    ) {
+        closeGame();
+        return;
     }
 
-    function closeGame() { document.getElementById('gameModal').style.display = 'none'; clearInterval(gameInterval); }
+    game.style.display = "block";
+    stats.style.display = "block";
 
-    function initGame() {
-        disk = { x: 50, y: 150, velocity: 0, gravity: 0.25, jump: -5, radius: 10 };
-        disk = { x: 50, y: 150, velocity: 0, gravity: 0.2, jump: -4.3, w: 24, h: 24 };
-        pipes = []; score = 0; gameOver = false;
-        clearInterval(gameInterval);
-        gameInterval = setInterval(gameLoop, 1000 / 60);
+    initGame();
+}
+
+function closeGame() {
+    document.getElementById(
+        "gameModal"
+    ).style.display = "none";
+
+    document.getElementById(
+        "scoreModal"
+    ).style.display = "none";
+
+    clearInterval(gameInterval);
+}
+
+function updateStats() {
+    const best =
+        localStorage.getItem(
+            "floppy_best"
+        ) || 0;
+
+    document.getElementById(
+        "liveScoreLabel"
+    ).innerText = score || 0;
+
+    document.getElementById(
+        "liveBestLabel"
+    ).innerText = best;
+}
+
+function initGame() {
+
+    disk = {
+        x: 60,
+        y: 170,
+        velocity: 0,
+        gravity: 0.18,
+        jump: -4.2
+    };
+
+    pipes = [];
+    score = 0;
+    gameOver = false;
+
+    updateStats();
+
+    clearInterval(gameInterval);
+
+    gameInterval =
+        setInterval(
+            gameLoop,
+            1000 / 60
+        );
+}
+
+function jump() {
+
+    if (gameOver) {
+        initGame();
+        return;
     }
 
-    function jump() { if (gameOver) { initGame(); } else { disk.velocity = disk.jump; } }
+    disk.velocity =
+        disk.jump;
+}
 
-    window.addEventListener("keydown", (e) => { if (e.code === "Space" && document.getElementById('gameModal').style.display === 'block') { e.preventDefault(); jump(); } });
-    canvas.addEventListener("click", jump);
+window.addEventListener(
+    "keydown",
+    e => {
 
-    function gameLoop() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        disk.velocity += disk.gravity;
-        disk.y += disk.velocity;
-
-        // РИСУЕМ РЕТРО-ДИСКЕТУ HANDMADE
-        ctx.save();
-        ctx.translate(disk.x, disk.y);
-
-        // 1. Синий корпус дискеты со скошенным правым верхним углом
-        ctx.fillStyle = "#2244aa"; 
-        ctx.beginPath();
-        ctx.moveTo(-12, -12);
-        ctx.lineTo(6, -12);
-        ctx.lineTo(12, -6); // Тот самый скос 3.5 дискеты
-        ctx.lineTo(12, 12);
-        ctx.lineTo(-12, 12);
-        ctx.closePath();
-        ctx.fill();
-
-        // 2. Серебряная металлическая шторка сверху
-        ctx.fillStyle = "#aaaaaa";
-        ctx.fillRect(-6, -12, 8, 7);
-        ctx.fillStyle = "#333333"; // Прорезь на шторке
-        ctx.fillRect(-4, -10, 2, 4);
-
-        // 3. Белая наклейка-этикетка снизу
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(-9, -1, 18, 11);
-
-        // Маленькие серые полосочки текста на наклейке
-        ctx.fillStyle = "#888888";
-        ctx.fillRect(-7, 2, 14, 1);
-        ctx.fillRect(-7, 5, 10, 1);
-        ctx.fillRect(-7, 8, 12, 1);
-
-        ctx.restore();
-
-        if (disk.y + 12 > canvas.height || disk.y - 12 < 0) { gameOver = true; }
-
-        // Трубы
-        if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 150) {
-            let gap = 110;
-            let topHeight = Math.random() * (canvas.height - gap - 60) + 30;
-            pipes.push({ x: canvas.width, top: topHeight, bottom: canvas.height - topHeight - gap });
+        if (
+            e.code === "Space" &&
+            document.getElementById(
+                "gameModal"
+            ).style.display ===
+                "block"
+        ) {
+            e.preventDefault();
+            jump();
         }
+    }
+);
 
-        for (let i = pipes.length - 1; i >= 0; i--) {
-            pipes[i].x -= 2;
-            ctx.fillStyle = "#252528";
-            ctx.strokeStyle = "#3a3a42";
-            ctx.lineWidth = 2;
+canvas.addEventListener(
+    "click",
+    jump
+);
 
-            ctx.fillRect(pipes[i].x, 0, 40, pipes[i].top);
-            ctx.strokeRect(pipes[i].x, 0, 40, pipes[i].top);
-            ctx.fillRect(pipes[i].x, canvas.height - pipes[i].bottom, 40, pipes[i].bottom);
-            ctx.strokeRect(pipes[i].x, canvas.height - pipes[i].bottom, 40, pipes[i].bottom);
+function gameLoop() {
 
-            if (disk.x + 12 > pipes[i].x && disk.x - 12 < pipes[i].x + 40) {
-                if (disk.y - 12 < pipes[i].top || disk.y + 12 > canvas.height - pipes[i].bottom) { gameOver = true; }
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    disk.velocity +=
+        disk.gravity;
+
+    disk.y +=
+        disk.velocity;
+
+    ctx.save();
+
+    ctx.translate(
+        disk.x,
+        disk.y
+    );
+
+    ctx.fillStyle =
+        "#2244aa";
+
+    ctx.beginPath();
+
+    ctx.moveTo(-12, -12);
+    ctx.lineTo(6, -12);
+    ctx.lineTo(12, -6);
+    ctx.lineTo(12, 12);
+    ctx.lineTo(-12, 12);
+
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle =
+        "#aaaaaa";
+
+    ctx.fillRect(
+        -6,
+        -12,
+        8,
+        7
+    );
+
+    ctx.fillStyle =
+        "#333333";
+
+    ctx.fillRect(
+        -4,
+        -10,
+        2,
+        4
+    );
+
+    ctx.fillStyle =
+        "#ffffff";
+
+    ctx.fillRect(
+        -9,
+        -1,
+        18,
+        11
+    );
+
+    ctx.restore();
+
+    if (
+        disk.y > canvas.height ||
+        disk.y < 0
+    ) {
+        triggerGameOver();
+    }
+
+    if (
+        pipes.length === 0 ||
+        pipes[
+            pipes.length - 1
+        ].x <
+            canvas.width - 150
+    ) {
+        const gap = 120;
+
+        const top =
+            Math.random() *
+                (
+                    canvas.height -
+                    gap -
+                    60
+                ) +
+            30;
+
+        pipes.push({
+            x: canvas.width,
+            top,
+            bottom:
+                canvas.height -
+                top -
+                gap,
+            passed: false
+        });
+    }
+
+    for (
+        let i =
+            pipes.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const p =
+            pipes[i];
+
+        p.x -= 2;
+
+        ctx.fillStyle =
+            "#252528";
+
+        ctx.fillRect(
+            p.x,
+            0,
+            40,
+            p.top
+        );
+
+        ctx.fillRect(
+            p.x,
+            canvas.height -
+                p.bottom,
+            40,
+            p.bottom
+        );
+
+        if (
+            disk.x + 12 >
+                p.x &&
+            disk.x - 12 <
+                p.x + 40
+        ) {
+            if (
+                disk.y <
+                    p.top ||
+                disk.y >
+                    canvas.height -
+                        p.bottom
+            ) {
+                triggerGameOver();
             }
-
-            if (pipes[i].x === 50) { score++; }
-            if (pipes[i].x < -40) { pipes.splice(i, 1); }
         }
 
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "14px monospace";
-        ctx.fillText("SCORE: " + score, 15, 25);
+        if (
+            !p.passed &&
+            p.x < disk.x
+        ) {
+            p.passed = true;
+            score++;
+            updateStats();
+        }
 
-        if (gameOver) {
-            clearInterval(gameInterval);
-            ctx.fillStyle = "rgba(5,5,7,0.85)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#ff3333";
-            ctx.font = "bold 18px monospace";
-            ctx.fillText("SYSTEM OVERLOAD", 75, 150);
-            ctx.fillStyle = "#71717a";
-            ctx.font = "12px monospace";
-            ctx.fillText("SCORE: " + score, 120, 180);
-            ctx.fillStyle = "#ffffff";
-            ctx.font = "11px monospace";
-            ctx.fillText("CLICK SCREEN TO REBOOT.EXE", 60, 220);
+        if (p.x < -40) {
+            pipes.splice(
+                i,
+                1
+            );
         }
     }
+
+    ctx.fillStyle =
+        "#ffffff";
+
+    ctx.font =
+        "14px monospace";
+
+    ctx.fillText(
+        "SCORE: " + score,
+        15,
+        25
+    );
+}
+
+function triggerGameOver() {
+
+    gameOver = true;
+
+    clearInterval(
+        gameInterval
+    );
+
+    const best =
+        Number(
+            localStorage.getItem(
+                "floppy_best"
+            ) || 0
+        );
+
+    if (score > best) {
+        localStorage.setItem(
+            "floppy_best",
+            score
+        );
+    }
+
+    updateStats();
+
+    ctx.fillStyle =
+        "rgba(5,5,7,.85)";
+
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    ctx.fillStyle =
+        "#ff3333";
+
+    ctx.font =
+        "bold 18px monospace";
+
+    ctx.fillText(
+        "SYSTEM OVERLOAD",
+        55,
+        150
+    );
+
+    ctx.fillStyle =
+        "#ffffff";
+
+    ctx.font =
+        "12px monospace";
+
+    ctx.fillText(
+        "CLICK TO REBOOT",
+        82,
+        210
+    );
+}
 </script>
-    <!-- ВСПЛЫВАЮЩЕЕ ОКНО ИГРЫ FLAPPY DISK -->
-    <div class="game-window" id="gameModal" style="display: none; position: fixed; bottom: 50px; left: 20px; z-index: 998;">
-        <div class="title-bar">
-            <div class="title-bar-text">🕹️ FLAPPY_DISK.EXE</div>
-            <div class="title-bar-controls"> <button onclick="closeGame()">X</button> </div>
-        </div>
-        <div style="padding: 10px; text-align: center;">
-            <canvas id="gameCanvas" width="300" height="350" style="background: #09090b; border: 2px solid #3a3a42; display: block;"></canvas>
-            <div style="font-size: 11px; color: #71717a; margin-top: 8px;">PRESS SPACE OR CLICK TO JUMP</div>
-        </div>
-    </div>
 
-    <!-- КВАДРАТНОЕ ОКНО РЕКОРДОВ 1:1 С ПУЛЬСИРУЮЩИМ КУБКОМ -->
-    <div class="game-window" id="scoreModal" style="display: none; position: fixed; bottom: 490px; left: 20px; z-index: 999; width: 320px; height: 320px; box-sizing: border-box;">
-        <div class="title-bar">
-            <div class="title-bar-text">🏆 PROFILE_STATS.LOG</div>
-            <div class="title-bar-controls"> <button onclick="closeGame()">X</button> </div>
-        </div>
-        <div style="padding: 25px 15px; text-align: center; background: #09090b; height: calc(100% - 30px); box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-            <div class="trophy-glow">🏆</div>
-            
-            <div class="stat-glow-text" style="color: #ffffff; margin-top: 10px;">
-                YOUR SCORE: <span id="liveScoreLabel" style="color: #ffff00; font-size: 18px;">0</span>
-            </div>
-            <div class="stat-glow-text" style="color: #00ff00; margin-top: 15px;">
-                BEST RECORD: <span id="liveBestLabel" style="color: #00ff00; font-size: 18px;">0</span>
-            </div>
-        </div>
-    </div>
+</body>
+</html>
 
-    <div class="taskbar">
-        <button class="start-btn" onclick="toggleGame()">Start</button>
-        <div class="tray-clock" id="clock">00:00</div>
-    </div>
 
-    <script>
-        let currentItem = "";
-        function openOrder(itemName) {
-            currentItem = itemName;
-            document.getElementById('modalProductTitle').innerText = "ORDER: " + itemName;
-            document.getElementById('orderModal').style.display = 'flex';
-        }
-        function closeOrder() { document.getElementById('orderModal').style.display = 'none'; }
-        
-        function updateClock() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-            document.getElementById('clock').innerText = timeString;
-        }
-        setInterval(updateClock, 1000); updateClock();
-
-        function sendOrder() {
-            const contact = document.getElementById('clientContact').value;
-            if(!contact) { alert('ПОЖАЛУЙСТА, ЗАПОЛНИТЕ ПОЛЕ!'); return; }
-            alert('ЗАКАЗ УСПЕШНО ОФОРМЛЕН! (Режим симуляции)');
-            closeOrder();
-            document.getElementById('clientContact').value = "";
-        }
-
-        const canvas = document.getElementById("gameCanvas");
-        const ctx = canvas.getContext("2d");
-        let gameInterval;
-        let disk, pipes, score, gameOver;
-
-        function toggleGame() {
-            const gameEl = document.getElementById('gameModal');
-            if (gameEl.style.display === 'none') {
-                gameEl.style.display = 'block';
-                document.getElementById('scoreModal').style.display = 'block';
-                updateStatsDisplay();
-                initGame();
-            } else {
-                closeGame();
-            }
-        }
-
-        function closeGame() {
-            document.getElementById('gameModal').style.display = 'none';
-            document.getElementById('scoreModal').style.display = 'none';
-            clearInterval(gameInterval);
-        }
-
-        function updateStatsDisplay() {
-            let highscore = localStorage.getItem("flop_highscore") || 0;
-            document.getElementById('liveScoreLabel').innerText = score || 0;
-            document.getElementById('liveBestLabel').innerText = highscore;
-        }
-
-        function initGame() {
-            disk = { x: 50, y: 180, velocity: 0, gravity: 0.17, jump: -4.1, w: 16, h: 16 };
-            pipes = []; score = 0; gameOver = false;
-            updateStatsDisplay();
-            clearInterval(gameInterval);
-            gameInterval = setInterval(gameLoop, 1000 / 60);
-        }
-
-        function jump() { if (!gameOver) disk.velocity = disk.jump; }
-
-        window.addEventListener("keydown", (e) => { 
-            if (e.code === "Space" && document.getElementById('gameModal').style.display === 'block') { 
-                e.preventDefault(); 
-                if(gameOver) initGame(); else jump();
-            } 
-        });
-        canvas.addEventListener("click", () => { if(gameOver) initGame(); else jump(); });
-
-        function gameLoop() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            disk.velocity += disk.gravity; disk.y += disk.velocity;
-            
-            ctx.save(); ctx.translate(disk.x, disk.y);
-            ctx.fillStyle = "#0022aa"; ctx.beginPath();
-            ctx.moveTo(-14, -14); ctx.lineTo(8, -14); ctx.lineTo(14, -8);
-            ctx.lineTo(14, 14); ctx.lineTo(-14, 14); ctx.closePath(); ctx.fill();
-            ctx.lineWidth = 1; ctx.strokeStyle = "#000055"; ctx.stroke();
-            ctx.fillStyle = "#888899"; ctx.fillRect(-6, -13, 10, 8);
-            ctx.fillStyle = "#bbbbcc"; ctx.fillRect(-2, -13, 2, 8);
-            ctx.fillStyle = "#ffffff"; ctx.fillRect(-10, -1, 20, 13);
-            ctx.fillStyle = "#888899"; ctx.fillRect(-8, 3, 16, 1); ctx.fillRect(-8, 7, 16, 1);
-            ctx.restore();
-
-            if (disk.y + 14 > canvas.height || disk.y - 14 < 0) { triggerGameOver(); }
-
-            if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 160) {
-                let gap = 120;
-                let topHeight = Math.random() * (canvas.height - gap - 60) + 30;
-                pipes.push({ x: canvas.width, top: topHeight, bottom: canvas.height - topHeight - gap, passed: false });
-            }
-
-            for (let i = pipes.length - 1; i >= 0; i--) {
-                pipes[i].x -= 1.6;
-
-                ctx.fillStyle = "#1e1e24"; ctx.strokeStyle = "#3a3a42"; ctx.lineWidth = 2;
-                ctx.fillRect(pipes[i].x, 0, 40, pipes[i].top); ctx.strokeRect(pipes[i].x, 0, 40, pipes[i].top);
-                ctx.fillStyle = "#2a2a32"; ctx.fillRect(pipes[i].x - 3, pipes[i].top - 15, 46, 15); ctx.strokeRect(pipes[i].x - 3, pipes[i].top - 15, 46, 15);
-                ctx.fillStyle = "#1e1e24"; ctx.fillRect(pipes[i].x, canvas.height - pipes[i].bottom, 40, pipes[i].bottom); ctx.strokeRect(pipes[i].x, canvas.height - pipes[i].bottom, 40, pipes[i].bottom);
-                ctx.fillStyle = "#2a2a32"; ctx.fillRect(pipes[i].x - 3, canvas.height - pipes[i].bottom, 46, 15); ctx.strokeRect(pipes[i].x - 3, canvas.height - pipes[i].bottom, 46, 15);
-
-                if (disk.x + 11 > pipes[i].x && disk.x - 11 < pipes[i].x + 40) {
-                    if (disk.y - 11 < pipes[i].top || disk.y + 11 > canvas.height - pipes[i].bottom) { triggerGameOver(); }
-                }
-
-                if (!pipes[i].passed && pipes[i].x < disk.x) { 
-                    pipes[i].passed = true; 
-                    score++; 
-                    updateStatsDisplay(); 
-                }
-                if (pipes[i].x < -40) { pipes.splice(i, 1); }
-            }
-
-            ctx.fillStyle = "#ffffff"; ctx.font = "14px monospace";
-            ctx.fillText("SCORE: " + score, 15, 25);
-        }
-
-        function triggerGameOver() {
-            gameOver = true;
-            clearInterval(gameInterval);
-            
-            let highscore = localStorage.getItem("flop_highscore") || 0;
-            if (score > highscore) {
-                localStorage.setItem("flop_highscore", score);
-            }
-            updateStatsDisplay();
-
-            ctx.fillStyle = "rgba(5,5,7,0.85)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#ff3333"; ctx.font = "bold 16px monospace"; ctx.fillText("SYSTEM OVERLOAD", 75, 150);
-            ctx.fillStyle = "#ffffff"; ctx.font = "13px monospace"; ctx.fillText("YOUR SCORE: " + score, 100, 190);
-            ctx.fillStyle = "#ffffff"; ctx.font = "11px monospace"; ctx.fillText("CLICK SCREEN TO REBOOT.EXE", 60, 240);
-        }
-    </script>
-    <script>
-        const windowsColors = ["#ff3333", "#00cc00", "#0044ff", "#ffcc00"];
-
-        window.addEventListener("mousemove", (e) => {
-            const pixel = document.createElement("div");
-            pixel.className = "trail-pixel";
-            pixel.style.backgroundColor = windowsColors[Math.floor(Math.random() * windowsColors.length)];
-            pixel.style.left = e.clientX + "px";
-            pixel.style.top = e.clientY + "px";
-            document.body.appendChild(pixel);
-
-            setTimeout(() => {
-                const randomX = (Math.random() - 0.5) * 30;
-                const randomY = (Math.random() - 0.5) * 30;
-                pixel.style.transform = "translate(" + randomX + "px, " + randomY + "px) scale(0)";
-                pixel.style.opacity = "0";
-            }, 50);
-
-            setTimeout(() => { pixel.remove(); }, 500);
-        });
-    </script>
-
-      <!-- НИЖНИЙ НЕОНОВЫЙ ВИЗУАЛИЗАТОР -->
-    <div class="winamp-player" id="winampModal" style="display: flex; align-items: flex-end; justify-content: space-between; background: transparent; border: none; box-shadow: none;">
-        <div id="eqContainer" style="width: 100%; height: 100%; display: flex; justify-content: space-between; align-items: flex-end; opacity: 0;">
-            <script>for(let i=0; i<40; i++) document.write('<div class="equalizer-bar"></div>');</script>
-        </div>
-        <audio id="winampAudio" src="music.mp3" loop></audio>
-    </div> 
-  
